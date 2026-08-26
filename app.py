@@ -2,14 +2,16 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import time
+import urllib.parse
 
 st.set_page_config(
-    page_title="ApexLead AI | WhatsApp Sales Agent for Dubai Businesses",
+    page_title="ApexLead AI | Autonomous Lead Hunter & Sales System",
     page_icon="⚡",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# Custom Styling
+# Professional CSS Styling
 st.markdown("""
 <style>
     #MainMenu {visibility: hidden;}
@@ -22,22 +24,40 @@ st.markdown("""
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     .main-title {
-        font-size: 28px;
+        font-size: 26px;
         font-weight: 800;
         color: #0f172a;
-        margin-bottom: 5px;
+        margin-bottom: 2px;
     }
     .sub-title {
-        font-size: 15px;
+        font-size: 14px;
         color: #64748b;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
+    }
+    .portal-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 22px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+    }
+    .btn-wa {
+        background-color: #25D366;
+        color: white !important;
+        padding: 6px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 13px;
+        display: inline-block;
     }
     .chat-box {
         background: #efeae2;
         border-radius: 12px;
         padding: 20px;
         border: 1px solid #cbd5e1;
-        min-height: 420px;
+        min-height: 380px;
         box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
     }
     .msg-incoming {
@@ -63,51 +83,146 @@ st.markdown("""
         box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         color: #1e293b;
     }
-    .stat-card {
-        background: white;
-        border: 1px solid #e2e8f0;
-        padding: 18px;
-        border-radius: 10px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
 </style>
 """, unsafe_allow_html=True)
 
-if 'leads_list' not in st.session_state:
-    st.session_state.leads_list = [
-        {"Time": "09:15 AM", "Customer": "Tariq Mansoor", "Phone": "+971 50 841 9921", "Interest": "1-Bedroom Luxury Apartment (Downtown)", "Budget": "AED 120,000 / yr", "Status": "🔥 Hot Lead", "Action": "Booked Viewing (Tomorrow 4 PM)"},
-        {"Time": "08:40 AM", "Customer": "Sarah Jenkins", "Phone": "+971 52 119 4022", "Interest": "Holiday Home / Short Stay (JVC)", "Budget": "AED 8,500 / month", "Status": "⚡ Qualified", "Action": "Sent Payment Link"},
-        {"Time": "Yesterday", "Customer": "Khalid Al-Hashemi", "Phone": "+971 55 901 3341", "Interest": "Villa for Investment (Dubai Hills)", "Budget": "AED 4.2M Cash", "Status": "🔥 Hot Lead", "Action": "Assigned to Senior Broker"},
+# --------------------------------------------------
+# 🗄️ Database & Discovered Leads Storage
+# --------------------------------------------------
+if 'discovered_leads' not in st.session_state:
+    st.session_state.discovered_leads = [
+        {
+            "Company": "Driven Properties",
+            "Category": "Luxury Real Estate",
+            "Location": "Business Bay, Dubai",
+            "Decision Maker": "Managing Director / Sales Head",
+            "Contact Phone": "+97144297040",
+            "Status": "Ready for Pitch 🎯",
+            "Target Pain": "Losing 40% of Instagram ad leads after 8 PM"
+        },
+        {
+            "Company": "bnbme Holiday Homes",
+            "Category": "Holiday Homes & Short Stay",
+            "Location": "Jumeirah Village Circle (JVC)",
+            "Decision Maker": "Operations & Bookings Manager",
+            "Contact Phone": "+971585836263",
+            "Status": "Ready for Pitch 🎯",
+            "Target Pain": "Delayed responses to weekend booking inquiries"
+        },
+        {
+            "Company": "Allsopp & Allsopp",
+            "Category": "Residential Real Estate",
+            "Location": "Dubai Marina",
+            "Decision Maker": "Head of Digital Lead Generation",
+            "Contact Phone": "+97144294444",
+            "Status": "Ready for Pitch 🎯",
+            "Target Pain": "Need automated budget qualification before broker calls"
+        },
+        {
+            "Company": "Deluxe Holiday Homes",
+            "Category": "Short-Term Vacation Rentals",
+            "Location": "Downtown Dubai",
+            "Decision Maker": "Guest Relations & Sales Director",
+            "Contact Phone": "+97143920202",
+            "Status": "Ready for Pitch 🎯",
+            "Target Pain": "Manual pricing negotiations taking over 2 hours"
+        }
     ]
 
-if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = [
-        {"sender": "user", "text": "مرحباً، شفت إعلانكم على إنستغرام بخصوص الشقق الفندقية في JVC، في مجال استفسر؟"},
-        {"sender": "bot", "text": "أهلاً بك! يسعدنا خدمتك عبر ApexLead AI 🌟 نعم متاح لدينا شقق فندقية مجهزة بالكامل ومطابقة لأعلى معايير الراحة. هل تبحث عن إيجار شهري أم سنوي؟ وكم عدد الغرف المفضل؟"},
-    ]
+DEMO_URL = "https://apexlead-dubai-d4paqwmnuacidn564qqnsr.streamlit.app"
 
-col_h1, col_h2 = st.columns([2.5, 1])
-with col_h1:
-    st.markdown("<div class='main-title'>⚡ ApexLead AI — Dubai Sales Engine Demo</div>", unsafe_allow_html=True)
-    st.markdown("<div class='sub-title'>24/7 Autonomous WhatsApp Lead Qualifier & Instant Booking System for Dubai Real Estate & SMEs</div>", unsafe_allow_html=True)
-with col_h2:
-    st.markdown("<div style='text-align:right;'><span style='background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; padding:6px 14px; border-radius:20px; font-weight:700; font-size:13px;'>🟢 System Active (Dubai Server)</span></div>", unsafe_allow_html=True)
+# --------------------------------------------------
+# 🧭 Sidebar Navigation
+# --------------------------------------------------
+with st.sidebar:
+    st.markdown("### ⚡ **ApexLead System**")
+    st.caption("Dubai Autonomous Sales Engine")
+    st.markdown("---")
+    menu = st.radio("Navigation", ["🎯 AI Lead Hunter (Autonomous)", "📱 Customer Experience Demo", "📊 Live CRM & Pipeline"])
+    st.markdown("---")
+    st.info("💡 **Active Live Demo:**\n" + DEMO_URL)
 
-m1, m2, m3, m4 = st.columns(4)
-m1.metric("Response Time", "⚡ < 3 Seconds", "Industry avg: 45 min")
-m2.metric("Ad Leads Converted", "84.2%", "+38% vs Traditional Form")
-m3.metric("Captured Pipeline Value", "AED 4,448,500", "This Week")
-m4.metric("Off-Hours Bookings", "42 Bookings", "Between 10 PM - 8 AM")
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-col_chat, col_crm = st.columns([1.1, 1.4], gap="large")
-
-with col_chat:
-    st.subheader("📱 Live WhatsApp Experience")
-    st.caption("جرب التحدث كأنك عميل قادم من إعلانات Instagram / Meta:")
+# --------------------------------------------------
+# 🎯 1. Autonomous Lead Hunter Screen
+# --------------------------------------------------
+if menu == "🎯 AI Lead Hunter (Autonomous)":
+    st.markdown("<div class='main-title'>🎯 Autonomous Dubai Lead Hunter & Pitch Generator</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-title'>النظام يبحث ذاتياً عن شركات دبي ويولد عروضاً بيعية مخصصة مع رابط المعاينة الحية</div>", unsafe_allow_html=True)
     
-    with st.container():
+    col_c1, col_c2, col_c3 = st.columns([1.5, 1.5, 1])
+    with col_c1:
+        target_sector = st.selectbox("Select Target Sector in Dubai", ["Holiday Homes & Short Stay", "Luxury Real Estate Agencies", "Car Rental & Chauffeur Services", "Aesthetic Clinics & Wellness"])
+    with col_c2:
+        target_area = st.selectbox("Target Location", ["All Dubai", "Business Bay & Downtown", "JVC & Dubai Hills", "Dubai Marina & Palm Jumeirah"])
+    with col_c3:
+        st.write("")
+        st.write("")
+        if st.button("🚀 تشغيل الرادار والبحث الذاتي", type="primary", use_container_width=True):
+            with st.spinner("جارٍ مسح السوق وتحليل شركات دبي وصياغة العروض المخصصة..."):
+                time.sleep(2)
+                st.success("تم اكتشاف شركات مؤهلة وتجهيز خطابات المبيعات الذكية فوراً!")
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.subheader(f"📋 Discovered High-Value Leads in {target_area}")
+
+    for idx, lead in enumerate(st.session_state.discovered_leads):
+        with st.container():
+            st.markdown(f"""
+            <div class="portal-card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="margin:0; color:#0f172a;">🏢 {lead['Company']} <span style="font-size:13px; background:#f1f5f9; color:#475569; padding:3px 8px; border-radius:6px;">{lead['Category']}</span></h3>
+                    <span style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; padding:4px 10px; border-radius:6px; font-weight:700; font-size:12px;">{lead['Status']}</span>
+                </div>
+                <p style="color:#64748b; font-size:13.5px; margin:8px 0;">
+                    📍 <b>Location:</b> {lead['Location']} | 👤 <b>Target:</b> {lead['Decision Maker']} | 📞 <b>Phone:</b> {lead['Contact Phone']}
+                </p>
+                <div style="background:#fffbeb; border-left:4px solid #f59e0b; padding:8px 12px; margin:10px 0; font-size:13px; color:#b45309;">
+                    💡 <b>الثغرة المكتشفة بالذكاء الاصطناعي:</b> {lead['Target Pain']}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            pitch_text = f"""مرحباً فريق {lead['Company']}،
+لاحظنا تميز نشاطكم في {lead['Location']}.
+في ظل التنافس العالي، تشير بيانات دبي إلى أن التأخر في الرد على إعلانات الواتساب لأكثر من 3 دقائق يفقدكم حتى 40% من العملاء الجادين.
+
+قمنا بتطوير ApexLead AI لخدمة عملائكم:
+1. رد فوري 24/7 بالعربية والإنجليزية خلال 3 ثوانٍ.
+2. فرز ميزانية العميل وتحديد نوع الطلب تلقائياً.
+3. حجز موعد المعاينة وتثبيته مباشرة.
+
+🔗 شاهد النظام وهو يعمل وكأنك عميل لشركتكم:
+{DEMO_URL}
+
+هل يناسبكم تفعيل تجربة مجانية لمدة 7 أيام لنشاطكم لاختبار سرعة إغلاق الصفقات؟"""
+
+            encoded_msg = urllib.parse.quote(pitch_text)
+            wa_link = f"https://wa.me/{lead['Contact Phone'].replace('+', '').replace(' ', '')}?text={encoded_msg}"
+            
+            c_p1, c_p2 = st.columns([4, 1.2])
+            with c_p1:
+                with st.expander("📄 معاينة خطاب المبيعات الذكي المخصص لهذه الشركة (Custom AI Pitch)"):
+                    st.text_area("رسالة العرض الجاهزة:", pitch_text, height=160, key=f"pitch_area_{idx}")
+            with c_p2:
+                st.write("")
+                st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-wa">💬 إرسال واتساب فوري</a>', unsafe_allow_html=True)
+
+# --------------------------------------------------
+# 📱 2. Customer Experience Demo Screen
+# --------------------------------------------------
+elif menu == "📱 Customer Experience Demo":
+    st.markdown("<div class='main-title'>📱 Interactive WhatsApp Simulator</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-title'>هذا هو النموذج التفاعلي الذي يراه العميل عند فتح الرابط</div>", unsafe_allow_html=True)
+    
+    col_chat, col_info = st.columns([1.2, 1], gap="large")
+    
+    if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = [
+            {"sender": "user", "text": "مرحباً، شفت إعلانكم على إنستغرام بخصوص الشقق الفندقية في JVC، في مجال استفسر؟"},
+            {"sender": "bot", "text": "أهلاً بك! يسعدنا خدمتك عبر ApexLead AI 🌟 نعم متاح لدينا شقق فندقية مجهزة بالكامل ومطابقة لأعلى معايير الراحة. هل تبحث عن إيجار شهري أم سنوي؟ وكم عدد الغرف المفضل؟"},
+        ]
+
+    with col_chat:
         chat_html = "<div class='chat-box'>"
         for msg in st.session_state.chat_history:
             if msg['sender'] == 'user':
@@ -116,56 +231,36 @@ with col_chat:
                 chat_html += f"<div class='msg-outgoing'><b>مساعد المبيعات الذكي (ApexLead):</b><br>{msg['text']}</div>"
         chat_html += "</div>"
         st.markdown(chat_html, unsafe_allow_html=True)
-    
-    with st.form("chat_input_form", clear_on_submit=True):
-        user_msg = st.text_input("اكتب رد العميل للتجربة...", placeholder="مثال: بدي استوديو مفروش بإيجار شهري بحدود 6000 درهم")
-        send_btn = st.form_submit_button("إرسال الرد 💬", type="primary", use_container_width=True)
         
-        if send_btn and user_msg:
-            st.session_state.chat_history.append({"sender": "user", "text": user_msg})
-            
-            if "شهري" in user_msg or "استوديو" in user_msg or "6000" in user_msg or "غرفة" in user_msg:
-                bot_reply = "تماماً! متاح لدينا خياران فاخران في JVC مع جيم ومسبح شامل كافة الفواتير بـ 5,800 درهم شهرياً. تحب أثبت لك موعد معاينة اليوم الساعة 5:30 مساءً أو أبعتلك فيديو تفصيلي للشقة؟"
-                st.session_state.leads_list.insert(0, {
-                    "Time": datetime.now().strftime("%I:%M %p"),
-                    "Customer": "New WhatsApp Lead (Demo)",
-                    "Phone": "+971 58 " + str(int(time.time()))[-6:],
-                    "Interest": "Studio / 1-Bed Furnished JVC",
-                    "Budget": "AED 6,000 / month",
-                    "Status": "🔥 Hot Lead",
-                    "Action": "Requested Tour / Video"
-                })
-            elif "ميزانية" in user_msg or "سعر" in user_msg or "شراء" in user_msg or "فيلا" in user_msg:
-                bot_reply = "يسعدنا تزويدك بقائمة المشاريع الجاهزة وتحت الإنشاء مع خطط دفع مرنة تبدأ من 1% شهرياً. ما هي الميزانية التقريبية التي تفضل البدء بها؟"
-            else:
-                bot_reply = "تم استلام طلبك بنجاح! سيقوم مستشارك العقاري المختص بالتواصل معك مباشرة عبر هذا الرقم خلال لحظات مع كافة العروض المتوفرة 🌟"
+        with st.form("demo_chat_form", clear_on_submit=True):
+            user_msg = st.text_input("اكتب رد العميل للتجربة...", placeholder="مثال: بدي شقة غرفتين وصالة مفروشة")
+            if st.form_submit_button("إرسال المحادثة 💬", type="primary", use_container_width=True) and user_msg:
+                st.session_state.chat_history.append({"sender": "user", "text": user_msg})
+                st.session_state.chat_history.append({"sender": "bot", "text": "تم تسجيل طلبك بدقة وتحديد خيارات مناسبة في أرقى أبراج المنطقة. سيتم تأكيد موعد المعاينة وإرسال اللوكيشن لك عبر هذا الرقم فوراً 🌟"})
+                st.rerun()
 
-            st.session_state.chat_history.append({"sender": "bot", "text": bot_reply})
-            st.rerun()
+    with col_info:
+        st.markdown("""
+        <div class="portal-card">
+            <h4>💡 ميزات النظام لشركات دبي:</h4>
+            <p style="color:#64748b; font-size:14px; line-height:1.7;">
+                • استجابة فورية خلال 3 ثوانٍ على مدار 24 ساعة.<br>
+                • لا يتطلب أي تدريب لموظفي الشركة.<br>
+                • جاهز للتكامل المباشر مع أرقام الواتساب الرسمية (WhatsApp Business API).
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
 
-with col_crm:
-    st.subheader("📊 Live Client Capture & Pipeline")
-    st.caption("البيانات والمواعيد المسحوبة آلياً من محادثات الواتساب فور حدوثها:")
+# --------------------------------------------------
+# 📊 3. Live CRM & Pipeline Screen
+# --------------------------------------------------
+elif menu == "📊 Live CRM & Pipeline":
+    st.markdown("<div class='main-title'>📊 Live Client Pipeline & Conversion Analytics</div>", unsafe_allow_html=True)
+    st.markdown("<div class='sub-title'>لوحة تحكم الشركة لمتابعة الصفقات وحجوزات المعاينة الفورية</div>", unsafe_allow_html=True)
     
-    df_leads = pd.DataFrame(st.session_state.leads_list)
-    st.dataframe(
-        df_leads,
-        use_container_width=True,
-        hide_index=True,
-        column_config={
-            "Status": st.column_config.TextColumn("Lead Grade"),
-            "Action": st.column_config.TextColumn("Automated Outcome")
-        }
-    )
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("""
-    <div class="stat-card">
-        <h4 style="margin-top:0; color:#0f172a;">💼 لماذا تشتري شركات دبي هذا النظام فوراً؟</h4>
-        <ul style="color:#64748b; font-size:13.5px; line-height:1.7; padding-left:20px; margin-bottom:0;">
-            <li><b>استجابة فورية خلال 3 ثوانٍ:</b> لا يضيع أي عميل يدخل من إعلانات تيك توك أو إنستغرام.</li>
-            <li><b>فلترة الميزانية:</b> النظام يفرز العملاء الجادين ويسحب الميزانية ونوع الطلب قبل تحويله لموظف المبيعات.</li>
-            <li><b>حجز المواعيد الآلي:</b> تثبيت موعد المعاينة أو الزيارة وتذكير العميل قبل الموعد بساعتين لتقليل الإلغاء.</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
+    leads_data = [
+        {"Time": "09:15 AM", "Customer": "Tariq Mansoor", "Phone": "+971 50 841 9921", "Interest": "1-Bedroom Luxury Apartment (Downtown)", "Budget": "AED 120,000 / yr", "Status": "🔥 Hot Lead", "Action": "Booked Viewing (Tomorrow 4 PM)"},
+        {"Time": "08:40 AM", "Customer": "Sarah Jenkins", "Phone": "+971 52 119 4022", "Interest": "Holiday Home / Short Stay (JVC)", "Budget": "AED 8,500 / month", "Status": "⚡ Qualified", "Action": "Sent Payment Link"},
+        {"Time": "Yesterday", "Customer": "Khalid Al-Hashemi", "Phone": "+971 55 901 3341", "Interest": "Villa for Investment (Dubai Hills)", "Budget": "AED 4.2M Cash", "Status": "🔥 Hot Lead", "Action": "Assigned to Senior Broker"},
+    ]
+    st.dataframe(pd.DataFrame(leads_data), use_container_width=True, hide_index=True)
