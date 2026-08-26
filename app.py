@@ -85,7 +85,6 @@ st.markdown("""
         border-radius: 12px;
         padding: 18px 22px;
         margin-bottom: 20px;
-        animation: pulse 2s infinite;
     }
 
     .wa-container {
@@ -135,7 +134,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 🗄️ Database & Memory Initializations
+# 🗄️ Database & Initial Memory
 # --------------------------------------------------
 if 'property_inventory' not in st.session_state:
     st.session_state.property_inventory = [
@@ -146,13 +145,18 @@ if 'property_inventory' not in st.session_state:
 
 if 'dubai_leads_pool' not in st.session_state:
     st.session_state.dubai_leads_pool = [
-        {"id": "KeyOne", "Company": "Key One Realty Group", "Location": "Al Barsha & Dubai Marina", "Category": "Holiday Homes & Leasing", "Email": "info@keyonerealtygroup.com", "Phone": "+97144471727", "Decision_Maker": "Managing Director", "Status": "Ready", "Last_Sent": None},
-        {"id": "FrankPorter", "Company": "Frank Porter Vacation Homes", "Location": "JLT & Dubai Marina", "Category": "Holiday Homes Operator", "Email": "info@frankporter.com", "Phone": "+97145897140", "Decision_Maker": "Head of Bookings", "Status": "Ready", "Last_Sent": None},
-        {"id": "WhiteCo", "Company": "White & Co Real Estate", "Location": "Dubai Marina", "Category": "Residential Brokerage", "Email": "info@whiteandcogroup.com", "Phone": "+97148762000", "Decision_Maker": "Sales Director", "Status": "Ready", "Last_Sent": None},
-        {"id": "DeluxeHomes", "Company": "Deluxe Holiday Homes", "Location": "Downtown Dubai (Boulevard Plaza)", "Category": "Vacation Rentals", "Email": "info@deluxehomes.com", "Phone": "+97143920202", "Decision_Maker": "Operations Lead", "Status": "Ready", "Last_Sent": None},
-        {"id": "haus_and_haus", "Company": "haus & haus Real Estate", "Location": "Gold & Diamond Park, Dubai", "Category": "Agency & Property Management", "Email": "enquiry@hausandhaus.com", "Phone": "+97143025800", "Decision_Maker": "Marketing Team", "Status": "Ready", "Last_Sent": None},
-        {"id": "Allsopp", "Company": "Allsopp & Allsopp", "Location": "Motor City & Business Bay", "Category": "Residential Agency", "Email": "info@allsoppandallsopp.com", "Phone": "+97144294444", "Decision_Maker": "Head of Operations", "Status": "Ready", "Last_Sent": None}
+        {"id": "KeyOne", "Company": "Key One Realty Group", "Location": "Al Barsha & Dubai Marina", "Category": "Holiday Homes & Leasing", "Email": "info@keyonerealtygroup.com", "Phone": "+97144471727", "Decision_Maker": "Managing Director", "Status": "Ready", "Last_Sent": "Never"},
+        {"id": "FrankPorter", "Company": "Frank Porter Vacation Homes", "Location": "JLT & Dubai Marina", "Category": "Holiday Homes Operator", "Email": "info@frankporter.com", "Phone": "+97145897140", "Decision_Maker": "Head of Bookings", "Status": "Ready", "Last_Sent": "Never"},
+        {"id": "WhiteCo", "Company": "White & Co Real Estate", "Location": "Dubai Marina", "Category": "Residential Brokerage", "Email": "info@whiteandcogroup.com", "Phone": "+97148762000", "Decision_Maker": "Sales Director", "Status": "Ready", "Last_Sent": "Never"},
+        {"id": "DeluxeHomes", "Company": "Deluxe Holiday Homes", "Location": "Downtown Dubai (Boulevard Plaza)", "Category": "Vacation Rentals", "Email": "info@deluxehomes.com", "Phone": "+97143920202", "Decision_Maker": "Operations Lead", "Status": "Ready", "Last_Sent": "Never"},
+        {"id": "haus_and_haus", "Company": "haus & haus Real Estate", "Location": "Gold & Diamond Park, Dubai", "Category": "Agency & Property Management", "Email": "enquiry@hausandhaus.com", "Phone": "+97143025800", "Decision_Maker": "Marketing Team", "Status": "Ready", "Last_Sent": "Never"},
+        {"id": "Allsopp", "Company": "Allsopp & Allsopp", "Location": "Motor City & Business Bay", "Category": "Residential Agency", "Email": "info@allsoppandallsopp.com", "Phone": "+97144294444", "Decision_Maker": "Head of Operations", "Status": "Ready", "Last_Sent": "Never"}
     ]
+
+# Ensure every item in pool has Last_Sent key
+for lead in st.session_state.dubai_leads_pool:
+    if "Last_Sent" not in lead:
+        lead["Last_Sent"] = "Never"
 
 if 'inbound_replies' not in st.session_state:
     st.session_state.inbound_replies = []
@@ -300,7 +304,6 @@ else:
         st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>🤖 Autonomous B2B Lead Engine & Live Reply Tracker</h1>", unsafe_allow_html=True)
         st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>نظام متكامل: إرسال آلي ذكي مع حماية 10 أيام، وفحص تلقائي لحظي للردود الواردة من الشركات المهتمة.</p>", unsafe_allow_html=True)
 
-        # 🔔 Hot Lead Inbound Notification Banner
         if st.session_state.inbound_replies:
             for rep in st.session_state.inbound_replies:
                 st.markdown(f"""
@@ -325,11 +328,11 @@ else:
             if st.button("⚡ Discover 5 New Leads", use_container_width=True):
                 rand_num = random.randint(100, 999)
                 new_pool = [
-                    {"id": f"Agency_{rand_num}_1", "Company": f"Marina Pearl Real Estate {rand_num}", "Location": "Dubai Marina", "Category": "Brokerage", "Email": f"info@marinapearl{rand_num}.com", "Phone": "+971501239845", "Decision_Maker": "Managing Director", "Status": "Ready", "Last_Sent": None},
-                    {"id": f"Agency_{rand_num}_2", "Company": f"JVC Signature Stays {rand_num}", "Location": "Jumeirah Village Circle", "Category": "Holiday Homes", "Email": f"contact@jvcsignature{rand_num}.com", "Phone": "+971589921478", "Decision_Maker": "Reservations Lead", "Status": "Ready", "Last_Sent": None},
-                    {"id": f"Agency_{rand_num}_3", "Company": f"Business Bay Living {rand_num}", "Location": "Business Bay", "Category": "Brokerage", "Email": f"sales@bbayliving{rand_num}.ae", "Phone": "+97145712399", "Decision_Maker": "Sales Director", "Status": "Ready", "Last_Sent": None},
-                    {"id": f"Agency_{rand_num}_4", "Company": f"Palm Luxury Escapes {rand_num}", "Location": "Palm Jumeirah", "Category": "Luxury Rentals", "Email": f"info@palmescapes{rand_num}.com", "Phone": "+971542289123", "Decision_Maker": "Property Manager", "Status": "Ready", "Last_Sent": None},
-                    {"id": f"Agency_{rand_num}_5", "Company": f"Downtown Elite Realty {rand_num}", "Location": "Downtown Dubai", "Category": "Off-Plan Specialists", "Email": f"contact@downtownelite{rand_num}.com", "Phone": "+97143928111", "Decision_Maker": "Principal Broker", "Status": "Ready", "Last_Sent": None},
+                    {"id": f"Agency_{rand_num}_1", "Company": f"Marina Pearl Real Estate {rand_num}", "Location": "Dubai Marina", "Category": "Brokerage", "Email": f"info@marinapearl{rand_num}.com", "Phone": "+971501239845", "Decision_Maker": "Managing Director", "Status": "Ready", "Last_Sent": "Never"},
+                    {"id": f"Agency_{rand_num}_2", "Company": f"JVC Signature Stays {rand_num}", "Location": "Jumeirah Village Circle", "Category": "Holiday Homes", "Email": f"contact@jvcsignature{rand_num}.com", "Phone": "+971589921478", "Decision_Maker": "Reservations Lead", "Status": "Ready", "Last_Sent": "Never"},
+                    {"id": f"Agency_{rand_num}_3", "Company": f"Business Bay Living {rand_num}", "Location": "Business Bay", "Category": "Brokerage", "Email": f"sales@bbayliving{rand_num}.ae", "Phone": "+97145712399", "Decision_Maker": "Sales Director", "Status": "Ready", "Last_Sent": "Never"},
+                    {"id": f"Agency_{rand_num}_4", "Company": f"Palm Luxury Escapes {rand_num}", "Location": "Palm Jumeirah", "Category": "Luxury Rentals", "Email": f"info@palmescapes{rand_num}.com", "Phone": "+971542289123", "Decision_Maker": "Property Manager", "Status": "Ready", "Last_Sent": "Never"},
+                    {"id": f"Agency_{rand_num}_5", "Company": f"Downtown Elite Realty {rand_num}", "Location": "Downtown Dubai", "Category": "Off-Plan Specialists", "Email": f"contact@downtownelite{rand_num}.com", "Phone": "+97143928111", "Decision_Maker": "Principal Broker", "Status": "Ready", "Last_Sent": "Never"},
                 ]
                 st.session_state.dubai_leads_pool.extend(new_pool)
                 st.success("🎉 تم اكتشاف 5 شركات دبي جديدة!")
@@ -344,7 +347,8 @@ else:
         with col_set1:
             st.markdown("<h3 style='font-size:18px; color:#ffffff;'>🚀 One-Click Autonomous Dispatch Execution</h3>", unsafe_allow_html=True)
             sender_email = st.text_input("Sender Gmail Address:", value="vertex.ecommerce.dubai@gmail.com")
-            app_password = st.text_input("Google App Password (كلمة مرور التطبيقات - 16 حرف):", type="password", placeholder="16-character Google app password")
+            app_password_raw = st.text_input("Google App Password (كلمة مرور التطبيقات - 16 حرف):", type="password", placeholder="16-character Google app password")
+            app_password = app_password_raw.replace(" ", "").strip()
             dispatch_lang = st.radio("Dispatch Pitch Format:", ["English Corporate Dubai Standard", "العربية الفصحى المنضبطة"], horizontal=True)
 
             if check_inbox_btn:
@@ -371,7 +375,6 @@ else:
                                             subject = subject.decode(encoding if encoding else "utf-8")
                                         from_ = msg.get("From")
                                         
-                                        # Extract body snippet
                                         body_snip = "New incoming inquiry received."
                                         if msg.is_multipart():
                                             for part in msg.walk():
@@ -417,13 +420,16 @@ else:
                             skipped_count = 0
 
                             for i, lead in enumerate(st.session_state.dubai_leads_pool):
-                                if lead['Last_Sent'] is not None:
-                                    last_sent_dt = datetime.strptime(lead['Last_Sent'], "%Y-%m-%d %H:%M")
-                                    if datetime.now() - last_sent_dt < timedelta(days=10):
-                                        lead['Status'] = f"🔒 Cooldown Active (Sent on {lead['Last_Sent']})"
-                                        skipped_count += 1
-                                        progress_bar.progress((i + 1) / total)
-                                        continue
+                                if lead.get('Last_Sent', 'Never') != "Never":
+                                    try:
+                                        last_sent_dt = datetime.strptime(lead['Last_Sent'], "%Y-%m-%d %H:%M")
+                                        if datetime.now() - last_sent_dt < timedelta(days=10):
+                                            lead['Status'] = f"🔒 Cooldown (Sent on {lead['Last_Sent']})"
+                                            skipped_count += 1
+                                            progress_bar.progress((i + 1) / total)
+                                            continue
+                                    except Exception:
+                                        pass
 
                                 status_text.markdown(f"**جاري الإرسال الآلي إلى:** `{lead['Company']}` ({lead['Email']})...")
                                 custom_demo_link = f"{BASE_APP_URL}/?client={lead['id']}"
@@ -488,7 +494,7 @@ Dubai, United Arab Emirates"""
                                 
                                 now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
                                 lead['Last_Sent'] = now_str
-                                lead['Status'] = f"✅ Sent ({now_str}) - Locked 10d"
+                                lead['Status'] = f"✅ Sent ({now_str})"
                                 sent_count += 1
 
                                 progress_bar.progress((i + 1) / total)
@@ -500,8 +506,17 @@ Dubai, United Arab Emirates"""
 
         with col_set2:
             st.markdown("<h3 style='font-size:18px; color:#ffffff;'>📋 Live Targets & 10-Day Protection Status</h3>", unsafe_allow_html=True)
-            df_display = pd.DataFrame(st.session_state.dubai_leads_pool)[["Company", "Location", "Email", "Status", "Last_Sent"]]
-            st.dataframe(df_display, use_container_width=True, hide_index=True)
+            # Safe DataFrame representation to prevent any KeyError
+            clean_records = []
+            for l in st.session_state.dubai_leads_pool:
+                clean_records.append({
+                    "Company": l.get("Company", "N/A"),
+                    "Location": l.get("Location", "Dubai"),
+                    "Email": l.get("Email", "N/A"),
+                    "Status": l.get("Status", "Ready"),
+                    "Last_Sent": l.get("Last_Sent", "Never")
+                })
+            st.dataframe(pd.DataFrame(clean_records), use_container_width=True, hide_index=True)
 
     # --- Screen 2: WhatsApp Property Operations ---
     elif admin_menu == "📥 WhatsApp Property Operations (إدارة العقارات)":
