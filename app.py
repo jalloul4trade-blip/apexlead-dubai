@@ -187,7 +187,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 🗄️ Comprehensive Deep Enterprise Database (Pure Structured Metrics)
+# 🗄️ Deep Enterprise Data
 # --------------------------------------------------
 DUBAI_DEEP_AUDIT_DATA = [
     {
@@ -307,21 +307,22 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 📧 1. Executive Pitch Matrix Screen (Fixed Clean Alignment)
+# 📧 1. Executive Pitch Matrix Screen
 # --------------------------------------------------
 if menu == "📧 Executive Pitch Matrix (خطابات المبيعات التنفيذية)":
     st.markdown("<h1 style='font-size:26px; font-weight:800; color:#ffffff;'>📧 Executive B2B Pitch Matrix & Audit Proposals</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>Executive pitches formatted in Dubai corporate standard English for C-Level executives, with clean bidirectional layout.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>Executive pitches formatted in Dubai corporate standard English for C-Level executives, with clean layout.</p>", unsafe_allow_html=True)
     
-    # Language Toggle Selector
     pitch_lang = st.radio("Select Pitch Format / اختر لغة الخطاب التنفيذي:", ["🇬🇧 Corporate English (Dubai C-Level Standard - Recommended)", "🇦🇪 Arabic Clean Format (العربية المنضبطة)"], horizontal=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
 
     for idx, lead in enumerate(DUBAI_DEEP_AUDIT_DATA):
-        if "English" in pitch_lang:
+        is_english = "English" in pitch_lang
+        uplift_badge = lead['Projected_Uplift_EN'] if is_english else lead['Projected_Uplift_AR']
+        
+        if is_english:
             email_subj = f"Operational AI Audit & Revenue Forecast for {lead['Company']} Dubai Campaigns"
-            
             email_body = f"""Dear {lead['Decision_Maker']} & Executive Leadership Team at {lead['Company']},
 
 We have been closely tracking your market leadership across your branches in {lead['Branches']} and your dedicated team of {lead['Brokers_Count']}.
@@ -355,7 +356,6 @@ Dubai, United Arab Emirates"""
 
         else:
             email_subj = f"تقرير التدقيق التشغيلي وتوقعات العائد المالي لشركة [{lead['Company']}]"
-            
             email_body = f"""السادة / إدارة [{lead['Company']}] وفريق المبيعات المحترمين،
 
 تحية طيبة وبعد،
@@ -387,7 +387,6 @@ Dubai, United Arab Emirates"""
 دبي، الإمارات العربية المتحدة"""
 
         mailto_link = f"mailto:{lead['Email']}?subject={urllib.parse.quote(email_subj)}&body={urllib.parse.quote(email_body)}"
-        
         wa_text = f"Dear {lead['Company']} Team, I have dispatched the Operational AI Audit & Revenue Forecast to {lead['Email']}. You can also explore the live interactive demo here: {DEMO_URL}"
         wa_link = f"https://wa.me/{lead['Phone'].replace('+', '').replace(' ', '')}?text={urllib.parse.quote(wa_text)}"
 
@@ -397,7 +396,7 @@ Dubai, United Arab Emirates"""
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <div>
                         <span style="font-size:19px; font-weight:800; color:#ffffff;">🏢 {lead['Company']}</span>
-                        &nbsp;&nbsp;<span class="tag-gold">📈 {lead['Projected_Uplift_EN' if 'English' in pitch_lang else lead['Projected_Uplift_AR']}</span>
+                        &nbsp;&nbsp;<span class="tag-gold">📈 {uplift_badge}</span>
                     </div>
                     <div>
                         <span style="color:#94a3b8; font-size:13px;">Target: <b>{lead['Decision_Maker']}</b></span>
@@ -406,7 +405,6 @@ Dubai, United Arab Emirates"""
             </div>
             """, unsafe_allow_html=True)
             
-            # Clean Code Block Display to prevent any BiDi text distortion
             st.caption(f"**Subject:** `{email_subj}`")
             st.text_area("Official Executive Proposal (Click button below to open in Mail client):", email_body, height=220, key=f"pitch_box_{idx}")
             
