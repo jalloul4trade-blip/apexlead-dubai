@@ -11,7 +11,7 @@ st.set_page_config(
 )
 
 # --------------------------------------------------
-# 🎨 Clean International SaaS Theme (Pure English UI)
+# 🎨 High-Contrast & Sharp International Theme
 # --------------------------------------------------
 st.markdown("""
 <style>
@@ -20,127 +20,151 @@ st.markdown("""
     header {visibility: hidden;}
     
     .stApp {
-        background-color: #0b0f19;
-        color: #f1f5f9;
+        background-color: #080c14;
+        color: #f8fafc;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     
+    /* Ultra-Clear & Crisp Sidebar Styling */
     section[data-testid="stSidebar"] {
-        background-color: #060911;
-        border-right: 1px solid #1e293b;
+        background-color: #0f172a !important;
+        border-right: 2px solid #334155 !important;
+    }
+    section[data-testid="stSidebar"] * {
+        color: #f8fafc !important;
+        font-size: 14.5px !important;
+        font-weight: 600 !important;
+    }
+    section[data-testid="stSidebar"] .stRadio label {
+        background: #1e293b;
+        padding: 10px 14px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        border: 1px solid #475569;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s;
+    }
+    section[data-testid="stSidebar"] .stRadio label:hover {
+        border-color: #10b981;
+        background: #334155;
     }
 
     .brand-box {
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #334155;
     }
     .brand-logo {
-        background: linear-gradient(135deg, #10b981 0%, #047857 100%);
-        color: #ffffff;
+        background: #10b981;
+        color: #ffffff !important;
         font-weight: 900;
-        font-size: 20px;
+        font-size: 22px !important;
         padding: 6px 14px;
         border-radius: 10px;
     }
     .brand-text {
-        font-size: 19px;
-        font-weight: 800;
-        color: #ffffff;
+        font-size: 20px !important;
+        font-weight: 800 !important;
+        color: #ffffff !important;
     }
     .brand-text span {
-        color: #10b981;
+        color: #10b981 !important;
     }
 
     .sme-card {
         background: #0f172a;
-        border: 1px solid #1e293b;
+        border: 1px solid #334155;
         border-radius: 12px;
         padding: 22px;
         margin-bottom: 18px;
     }
 
     .offer-badge {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        color: #ffffff;
-        padding: 4px 10px;
+        background: #d97706;
+        color: #ffffff !important;
+        padding: 6px 12px;
         border-radius: 6px;
-        font-weight: 800;
-        font-size: 12px;
+        font-weight: 800 !important;
+        font-size: 13px !important;
         display: inline-block;
     }
 
     .btn-email-action {
         background: #0284c7;
         color: white !important;
-        padding: 8px 18px;
-        border-radius: 6px;
+        padding: 10px 20px;
+        border-radius: 8px;
         text-decoration: none;
         font-weight: 700;
-        font-size: 13px;
+        font-size: 14px;
         display: inline-block;
+        text-align: center;
     }
 
     .btn-wa-action {
         background: #10b981;
         color: white !important;
-        padding: 8px 18px;
-        border-radius: 6px;
+        padding: 10px 20px;
+        border-radius: 8px;
         text-decoration: none;
         font-weight: 700;
-        font-size: 13px;
+        font-size: 14px;
         display: inline-block;
+        text-align: center;
     }
 
     /* WhatsApp Simulator */
     .wa-container {
         background: #0b141a;
-        border: 1px solid #1e293b;
+        border: 1px solid #334155;
         border-radius: 14px;
         overflow: hidden;
     }
     .wa-topbar {
-        background: #202c33;
-        padding: 12px 16px;
+        background: #1f2c34;
+        padding: 14px 18px;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         border-bottom: 1px solid #2a3942;
     }
     .wa-feed {
         background-color: #0b141a;
-        padding: 18px;
-        min-height: 400px;
-        max-height: 480px;
+        padding: 20px;
+        min-height: 420px;
+        max-height: 520px;
         overflow-y: auto;
     }
     .msg-user {
         background: #202c33;
-        color: #e9edef;
-        padding: 10px 14px;
-        border-radius: 0px 10px 10px 10px;
-        margin-bottom: 12px;
-        max-width: 80%;
-        font-size: 13.5px;
+        color: #f1f5f9;
+        padding: 11px 16px;
+        border-radius: 0px 12px 12px 12px;
+        margin-bottom: 14px;
+        max-width: 82%;
+        font-size: 14px;
         line-height: 1.5;
     }
     .msg-bot {
         background: #005c4b;
-        color: #e9edef;
-        padding: 10px 14px;
-        border-radius: 10px 0px 10px 10px;
-        margin-bottom: 12px;
+        color: #ffffff;
+        padding: 11px 16px;
+        border-radius: 12px 0px 12px 12px;
+        margin-bottom: 14px;
         margin-left: auto;
-        max-width: 80%;
-        font-size: 13.5px;
+        max-width: 82%;
+        font-size: 14px;
         line-height: 1.5;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 🗄️ Real Dubai SME & Boutique Database (5-15 Staff Agencies)
+# 🗄️ SME Lead Database
 # --------------------------------------------------
 DUBAI_SME_LEADS = [
     {
@@ -198,7 +222,7 @@ if 'chat_feed' not in st.session_state:
 DEMO_URL = "https://apexlead-dubai-d4paqwmnuacidn564qqnsr.streamlit.app"
 
 # --------------------------------------------------
-# 🧭 Sidebar Navigation (Pure English)
+# 🧭 Sidebar Navigation
 # --------------------------------------------------
 with st.sidebar:
     st.markdown("""
@@ -208,25 +232,26 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
     
-    st.caption("DUBAI BOUTIQUE REAL ESTATE AUTOMATION")
-    st.markdown("---")
+    st.markdown("<p style='color:#94a3b8; font-size:12px !important; text-transform:uppercase; margin-bottom:12px;'>Menu Navigation</p>", unsafe_allow_html=True)
     
     menu = st.radio(
-        "Navigation",
+        "Menu",
         [
             "🎯 Boutique Leads & Outreach",
             "📱 Live WhatsApp Simulator", 
             "📊 SME Pricing & Market Entry Model"
-        ]
+        ],
+        label_visibility="collapsed"
     )
     
-    st.markdown("---")
+    st.markdown("<br><hr style='border-color:#334155;'><br>", unsafe_allow_html=True)
     st.markdown(f"""
-    <div style='font-size:12px; color:#94a3b8;'>
-        <b>Market Launch Offer:</b><br>
-        <span style='color:#f59e0b; font-weight:800;'>🔥 AED 250 for Month 1</span><br>
-        <span style='color:#10b981;'>+ 1 Month Support FREE (2 Months Total)</span><br><br>
-        <b>Live Demo:</b> {DEMO_URL}
+    <div style='background:#1e293b; padding:14px; border-radius:8px; border:1px solid #475569;'>
+        <b style='color:#f59e0b; font-size:14px !important;'>🔥 Launch Offer Active:</b><br>
+        <span style='color:#f8fafc; font-size:13.5px !important;'>AED 250 for Month 1</span><br>
+        <span style='color:#34d399; font-size:13px !important;'>+ 1 Month Support FREE</span><br><br>
+        <b style='color:#94a3b8; font-size:12px !important;'>Active Link:</b><br>
+        <span style='color:#38bdf8; font-size:11.5px !important; word-break:break-all;'>{DEMO_URL}</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -297,15 +322,15 @@ ApexLead Team Dubai"""
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <div>
                     <span style="font-size:18px; font-weight:800; color:#ffffff;">🏢 {lead['Company']}</span>
-                    &nbsp;&nbsp;<span style="background:#082f49; color:#38bdf8; padding:2px 8px; border-radius:4px; font-size:12px;">{lead['Category']}</span>
-                    &nbsp;<span style="background:#064e3b; color:#34d399; padding:2px 8px; border-radius:4px; font-size:12px;">📍 {lead['Location']}</span>
+                    &nbsp;&nbsp;<span style="background:#082f49; color:#38bdf8; padding:3px 8px; border-radius:4px; font-size:12px; font-weight:700;">{lead['Category']}</span>
+                    &nbsp;<span style="background:#064e3b; color:#34d399; padding:3px 8px; border-radius:4px; font-size:12px; font-weight:700;">📍 {lead['Location']}</span>
                 </div>
                 <div>
                     <span class="offer-badge">🔥 AED 250 Launch Offer</span>
                 </div>
             </div>
             
-            <div style="background:#060911; border:1px solid #1e293b; padding:12px; border-radius:8px; margin-bottom:12px; font-size:13px; color:#cbd5e1;">
+            <div style="background:#080c14; border:1px solid #1e293b; padding:12px; border-radius:8px; margin-bottom:12px; font-size:13px; color:#cbd5e1;">
                 <b>Identified Friction:</b> {lead['Target_Pain']}
             </div>
         </div>
@@ -315,17 +340,17 @@ ApexLead Team Dubai"""
         
         c1, c2 = st.columns([1, 1])
         with c1:
-            st.markdown(f'<a href="{mailto_link}" class="btn-email-action" style="width:100%; text-align:center;">📧 Send Proposal via Email</a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="{mailto_link}" class="btn-email-action" style="width:100%;">📧 Send Proposal via Email</a>', unsafe_allow_html=True)
         with c2:
-            st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-wa-action" style="width:100%; text-align:center;">💬 Send WhatsApp Note</a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-wa-action" style="width:100%;">💬 Send WhatsApp Note</a>', unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 📱 2. Live WhatsApp Simulator Screen (Clean Polyglot Logic)
+# 📱 2. Live WhatsApp Simulator Screen (Context-Aware Multi-Scenario)
 # --------------------------------------------------
 elif menu == "📱 Live WhatsApp Simulator":
-    st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📱 Live WhatsApp Experience (Clean Single-Language Engine)</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#94a3b8; font-size:13.5px; margin-bottom:20px;'>Experience pure Arabic, English, or Hindi responses with zero language-mixing distortions.</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📱 Live WhatsApp Experience (Context-Aware Engine)</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#94a3b8; font-size:13.5px; margin-bottom:20px;'>Intelligent contextual responses that adapt to greetings, inquiries, pricing, and viewing requests.</p>", unsafe_allow_html=True)
     
     col_chat, col_details = st.columns([1.2, 1], gap="large")
     
@@ -336,7 +361,7 @@ elif menu == "📱 Live WhatsApp Simulator":
                 <div style="background:#10b981; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; color:white;">⚡</div>
                 <div>
                     <div style="font-weight:700; color:#e9edef; font-size:14.5px;">Boutique Agency AI Assistant</div>
-                    <div style="font-size:11.5px; color:#10b981;">Online (Instant Response)</div>
+                    <div style="font-size:11.5px; color:#10b981;">Online (Context-Aware Engine)</div>
                 </div>
             </div>
         </div>
@@ -351,35 +376,67 @@ elif menu == "📱 Live WhatsApp Simulator":
         chat_html += "</div>"
         st.markdown(chat_html, unsafe_allow_html=True)
         
-        with st.form("clean_chat_form", clear_on_submit=True):
-            user_input = st.text_input("Type customer inquiry (Arabic, English, or Hindi)...", placeholder="مثال: كم إيجار الاستوديو؟ / What is the monthly rent? / 1BHK price kya hai?")
+        with st.form("dynamic_chat_form", clear_on_submit=True):
+            user_input = st.text_input("Type inquiry (e.g. مرحبا / كيفك / شو في خيارات / كم السعر / بدي عاين الشقة / Hello / Namaste)...", placeholder="اكتب رسالة تجريبية هنا...")
             if st.form_submit_button("Send WhatsApp Message 💬", type="primary", use_container_width=True) and user_input:
                 st.session_state.chat_feed.append({"sender": "user", "text": user_input})
-                lower_in = user_input.lower()
+                lower_in = user_input.strip().lower()
                 
-                # Pure Hindi Response
-                if any(w in lower_in for w in ["namaste", "bhai", "kya", "crore", "lakh", "hai", "bhk", "paisa", "rent"]):
-                    reply = "Namaste ji! Humare paas 1BHK aur studio options available hain. Monthly rent 5,500 AED se start hota hai with all bills included. Kya aapko viewing schedule karni hai ya WhatsApp pe pictures dekhni hain?"
+                # --- Scenario 1: Hindi / Hinglish ---
+                if any(w in lower_in for w in ["namaste", "bhai", "kya", "crore", "lakh", "hai", "bhk", "paisa", "rent", "kaise"]):
+                    if any(w in lower_in for w in ["kaise", "haal", "namaste", "bhai"]) and len(lower_in.split()) <= 3:
+                        reply = "Namaste ji! Main badhiya hoon. Aap bataiye, Dubai mein rental apartment ya investment property dekh rahe hain?"
+                    elif any(w in lower_in for w in ["price", "rent", "kitna"]):
+                        reply = "Studio aur 1BHK starting rent 5,500 AED per month hai with all utilities included. Kya aap pictures dekhna chahenge?"
+                    else:
+                        reply = "Humare paas JVC aur Marina mein ready options available hain. Aap kab viewing schedule karna chahte hain?"
                 
-                # Pure English Response
-                elif any(w in lower_in for w in ["hello", "hi", "price", "bedroom", "studio", "available", "month", "jvc", "marina", "rent"]):
-                    reply = "Hello! We have fully furnished units available right now starting from AED 5,500 per month including all utility bills and high-speed internet. Would you like to schedule a viewing today or should I send you the photo gallery?"
-                
-                # Pure Arabic Response
+                # --- Scenario 2: English ---
+                elif any(w in lower_in for w in ["hello", "hi", "hey", "price", "bedroom", "studio", "available", "month", "jvc", "marina", "rent", "viewing", "options"]):
+                    if any(w in lower_in for w in ["hi", "hello", "hey", "how are you"]) and len(lower_in.split()) <= 4:
+                        reply = "Hello! I am doing great, thank you for reaching out. Are you looking for a furnished monthly rental or a yearly apartment in Dubai?"
+                    elif any(w in lower_in for w in ["option", "available", "what do you have"]):
+                        reply = "We currently have luxury Studios (AED 5,400/mo), 1-Bedrooms (AED 7,200/mo), and 2-Bedrooms (AED 9,800/mo) in JVC and Dubai Marina. Which area do you prefer?"
+                    elif any(w in lower_in for w in ["price", "cost", "rent"]):
+                        reply = "Our monthly rates start at AED 5,400 all-inclusive (DEWA, high-speed WiFi, and gym access). Would you like to view the unit today?"
+                    elif any(w in lower_in for w in ["viewing", "visit", "see"]):
+                        reply = "We can arrange a viewing today at 5:00 PM or tomorrow at 11:00 AM. Which time works best for you?"
+                    else:
+                        reply = "Thank you for your inquiry! We have units available matching your request. Would you like me to send the full photo gallery and location map?"
+
+                # --- Scenario 3: Arabic Context-Aware (No English words mixed) ---
                 else:
-                    reply = "أهلاً وسهلاً بك. متاح لدينا حالياً شقق مفروشة بالكامل ومجهزة في أرقى الأبراج شاملة لكافة الفواتير والإنترنت. هل تفضل تحديد موعد للمعاينة اليوم أم ترغب في إرسال الصور والتفاصيل عبر هذه المحادثة؟"
-                
+                    # 1. Greetings / Small talk
+                    if any(w in lower_in for w in ["كيفك", "شلونك", "أخبارك", "عساك بخير", "مرحبا", "هلا", "السلام"]):
+                        reply = "أهلاً وسهلاً بك، حياك الله. أنا بخير وسعيد بخدمتك. هل تبحث عن شقة مفروشة بإيجار شهري أم سنوي؟ وما هي المنطقة المفضلة لديك؟"
+                    
+                    # 2. Options inquiry
+                    elif any(w in lower_in for w in ["شو في خيارات", "شو عندكم", "ما هي الخيارات", "العروض المتوفرة", "شو متاح"]):
+                        reply = "متاح لدينا حالياً ثلاث فئات مميزة: استوديو مفروش بالكامل (٥,٤٠٠ درهم شهرياً)، غرفة وصالة (٧,٢٠٠ درهم شهرياً)، وغرفتين وصالة عائلية فاخرة في قرية جميرا الدائرية ودبي مارينا. ما هي المساحة الأنسب لطلبكم؟"
+                    
+                    # 3. Pricing & Budget
+                    elif any(w in lower_in for w in ["كم السعر", "كم الإيجار", "الأسعار", "بكم", "تكلفة", "ميزانية"]):
+                        reply = "تبدأ الأسعار الشهرية من ٥,٤٠٠ درهم شاملة لجميع الفواتير والإنترنت والخدمات الترفيهية مثل المسبح والجيم. هل تفضل دفع الإيجار شهرياً أم بنظام الشيكات السنوية؟"
+                    
+                    # 4. Viewing & Booking
+                    elif any(w in lower_in for w in ["معاينة", "موعد", "حجز", "بدي شوف", "بدي عاين", "الموقع", "لوكيشن"]):
+                        reply = "يسعدنا ترتيب موعد لمعاينة الشقة اليوم الساعة الخامسة مساءً أو غداً الساعة الحادية عشرة صباحاً. أي الموعدين يناسب جدولكم الكريم؟"
+                    
+                    # 5. Default Property Inquiry
+                    else:
+                        reply = "تم استلام طلبكم الكريم بعناية. متاح لدينا خيارات مطابقة وجاهزة للسكن الفوري. هل ترغب في إرسال الصور ومخطط الشقة عبر هذه المحادثة أولاً؟"
+
                 st.session_state.chat_feed.append({"sender": "bot", "text": reply})
                 st.rerun()
 
     with col_details:
         st.markdown("""
         <div class="sme-card">
-            <h3 style="margin-top:0; color:#ffffff; font-size:17px;">💡 Why the AED 250 Offer is Unbeatable:</h3>
+            <h3 style="margin-top:0; color:#ffffff; font-size:17px;">💡 Multi-Scenario Contextual Intelligence:</h3>
             <ul style="color:#cbd5e1; font-size:13.5px; line-height:1.8; padding-left:20px; margin-bottom:0;">
-                <li><b>Zero Risk for Agency:</b> 250 AED is less than the cost of a single dinner in Dubai.</li>
-                <li><b>2 Full Months of Value:</b> Gives you 60 days to prove real lead conversions.</li>
-                <li><b>Fast Cashflow & Social Proof:</b> Onboard 10 agencies = AED 2,500 immediate cash + 10 active case studies to raise prices to AED 1,500+.</li>
+                <li><b>No Repetitive Scripts:</b> Recognizes greetings, pricing requests, available unit queries, and viewing requests dynamically.</li>
+                <li><b>Pure Linguistic Integrity:</b> Zero language-mixing bugs. Pure Arabic, Pure English, and Pure Hindi.</li>
+                <li><b>Unbeatable Launch Price:</b> AED 250 for Month 1 + 1 Month FREE Support gives you the fastest path to client acquisition.</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
