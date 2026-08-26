@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import urllib.parse
-import socket
 import random
 import time
 
@@ -156,7 +155,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 🗄️ Database: Live Properties & Imported Leads
+# 🗄️ Pre-loaded Verified Dubai Real Estate Database
 # --------------------------------------------------
 if 'property_inventory' not in st.session_state:
     st.session_state.property_inventory = [
@@ -165,8 +164,15 @@ if 'property_inventory' not in st.session_state:
         {"ID": "DXB-103", "Title": "2BR Marina Panoramic", "Location": "Dubai Marina", "Type": "Apartment", "Price": "AED 135,000 / yr", "Status": "🟢 Available", "Added_By": "WhatsApp Ingest"},
     ]
 
-if 'custom_imported_leads' not in st.session_state:
-    st.session_state.custom_imported_leads = []
+if 'builtin_dubai_leads' not in st.session_state:
+    st.session_state.builtin_dubai_leads = [
+        {"id": "KeyOne", "Company": "Key One Realty Group", "Location": "Al Barsha / Dubai Marina", "Team_Size": "10-15 Staff", "Decision_Maker": "Managing Director", "Email": "info@keyonerealtygroup.com", "Phone": "+97144471727", "Category": "Holiday Homes"},
+        {"id": "FrankPorter", "Company": "Frank Porter Vacation Homes", "Location": "JLT / Dubai Marina", "Team_Size": "12 Staff", "Decision_Maker": "Head of Bookings", "Email": "info@frankporter.com", "Phone": "+97145897140", "Category": "Vacation Rentals"},
+        {"id": "WhiteCo", "Company": "White & Co Real Estate", "Location": "Dubai Marina", "Team_Size": "15 Brokers", "Decision_Maker": "Managing Director", "Email": "info@whiteandcogroup.com", "Phone": "+97148762000", "Category": "Brokerage"},
+        {"id": "DeluxeHomes", "Company": "Deluxe Holiday Homes", "Location": "Downtown Dubai", "Team_Size": "18 Staff", "Decision_Maker": "Reservations Lead", "Email": "info@deluxehomes.com", "Phone": "+97143920202", "Category": "Short-Term Rentals"},
+        {"id": "haus_and_haus", "Company": "haus & haus Real Estate", "Location": "Gold & Diamond Park, Dubai", "Team_Size": "50+ Brokers", "Decision_Maker": "Director of Sales", "Email": "enquiry@hausandhaus.com", "Phone": "+97143025800", "Category": "Residential Agency"},
+        {"id": "Allsopp", "Company": "Allsopp & Allsopp", "Location": "Motor City / Marina", "Team_Size": "100+ Brokers", "Decision_Maker": "CEO / Marketing Head", "Email": "info@allsoppandallsopp.com", "Phone": "+97144294444", "Category": "Leading Brokerage"}
+    ]
 
 if 'broker_chat' not in st.session_state:
     st.session_state.broker_chat = [
@@ -192,7 +198,7 @@ if view_mode == "client" or client_id:
     matched_company = str(client_id).replace("_", " ") if client_id else "Your Real Estate Agency"
     matched_loc = "Dubai"
 
-    for lead in st.session_state.custom_imported_leads:
+    for lead in st.session_state.builtin_dubai_leads:
         if lead.get("id", "").lower() == str(client_id).lower():
             matched_company = lead.get("Company", matched_company)
             matched_loc = lead.get("Location", matched_loc)
@@ -286,73 +292,119 @@ else:
         """, unsafe_allow_html=True)
 
         admin_menu = st.radio("Admin Navigation", [
-            "📂 Import Real Leads (رفع ملف الداتا المؤكدة)",
+            "🎯 Active Dubai Outreach & Dedicated Demos (الشركات الجاهزة)",
             "📥 WhatsApp Property Operations (إدارة العقارات)",
             "📋 Real-Time Property Inventory (قائمة العقارات)",
-            "🎯 Active Outreach & Dedicated Demos (العروض الحية)",
             "📊 Launch Pricing & Scaling Model"
         ])
         
         available_cnt = len([p for p in st.session_state.property_inventory if "Available" in p['Status']])
-        imported_cnt = len(st.session_state.custom_imported_leads)
+        leads_cnt = len(st.session_state.builtin_dubai_leads)
 
         st.markdown("<br><hr style='border-color:#334155;'><br>", unsafe_allow_html=True)
         st.markdown(f"""
         <div style='background:#1e293b; padding:14px; border-radius:8px; border:1px solid #475569;'>
-            <b style='color:#10b981; font-size:13.5px !important;'>Live Statistics:</b><br>
-            <span style='color:#38bdf8; font-size:13px !important;'>📁 {imported_cnt} Verified Leads Loaded</span><br>
+            <b style='color:#10b981; font-size:13.5px !important;'>Live Database:</b><br>
+            <span style='color:#38bdf8; font-size:13px !important;'>🏢 {leads_cnt} Verified Dubai Agencies</span><br>
             <span style='color:#34d399; font-size:13px !important;'>🟢 {available_cnt} Active Properties</span>
         </div>
         """, unsafe_allow_html=True)
 
-    # --- Screen 1: Import Real Leads ---
-    if admin_menu == "📂 Import Real Leads (رفع ملف الداتا المؤكدة)":
-        st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📂 Import Verified Real Estate Leads (CSV / Excel)</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>ارفع ملف الداتا المضمونة وسيقوم النظام فوراً بتوليد روابط الديمو وصياغة العروض وإعداد روابط الواتساب والإيميل تلقائياً.</p>", unsafe_allow_html=True)
+    # --- Screen 1: Active Dubai Outreach & Dedicated Demos ---
+    if admin_menu == "🎯 Active Dubai Outreach & Dedicated Demos (الشركات الجاهزة)":
+        st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>🎯 Verified Dubai Real Estate Agencies & Demos</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>قائمة مدمجة ومفحوصة لشركات دبي النشطة مع روابط ديمو مخصصة وعروض إرسال جاهزة فوريًا:</p>", unsafe_allow_html=True)
 
-        uploaded_file = st.file_uploader("Upload CSV or Excel file containing (Company, Email, Phone, Location)", type=["csv", "xlsx"])
-        
-        if uploaded_file is not None:
-            try:
-                if uploaded_file.name.endswith(".csv"):
-                    df = pd.read_csv(uploaded_file)
-                else:
-                    df = pd.read_excel(uploaded_file)
+        lang_pref = st.radio("Proposal Language:", ["English Pitch (Corporate Dubai)", "Arabic Pitch (عربي رسمي)"], horizontal=True)
+        st.markdown("<br>", unsafe_allow_html=True)
 
-                # Map columns
-                formatted_leads = []
-                for idx, row in df.iterrows():
-                    c_name = str(row.get("Company", row.get("company", row.get("Name", f"Agency_{idx+1}"))))
-                    c_email = str(row.get("Email", row.get("email", "")))
-                    c_phone = str(row.get("Phone", row.get("phone", row.get("Mobile", ""))))
-                    c_loc = str(row.get("Location", row.get("location", row.get("Area", "Dubai"))))
+        for idx, lead in enumerate(st.session_state.builtin_dubai_leads):
+            custom_demo_link = f"{BASE_APP_URL}/?client={lead['id']}"
 
-                    formatted_leads.append({
-                        "id": c_name.replace(" ", "_").replace("&", "and"),
-                        "Company": c_name,
-                        "Email": c_email,
-                        "Phone": c_phone,
-                        "Location": c_loc,
-                        "Decision_Maker": "Management Team"
-                    })
+            if "English" in lang_pref:
+                email_subj = f"Quick question regarding {lead['Company']} WhatsApp inquiries"
+                email_body = f"""Hi {lead['Decision_Maker']} & team at {lead['Company']},
 
-                st.session_state.custom_imported_leads = formatted_leads
-                st.success(f"🎉 تم استيراد وتجهيز {len(formatted_leads)} شركة مؤكدة بنجاح! توجه إلى قسم 'Active Outreach & Dedicated Demos' لإرسال العروض فوراً.")
-                st.dataframe(df, use_container_width=True)
+I noticed your active property listings in {lead['Location']}.
 
-            except Exception as e:
-                st.error(f"حدث خطأ أثناء قراءة الملف: {str(e)}")
+For boutique teams, replying to Meta and Instagram ad inquiries after 8 PM or on weekends often causes serious buyer drop-offs.
 
-        st.markdown("---")
-        st.markdown("""
-        <div class="sme-card">
-            <h4 style="color:#ffffff; margin-top:0;">📋 صيغة الأعمدة المطلوبة في الملف (Header Columns):</h4>
-            <p style="color:#cbd5e1; font-size:13.5px; margin-bottom:0;">
-                تأكد أن يحتوي الملف على الأعمدة التالية (أو ما يماثلها):<br>
-                <code>Company</code> | <code>Email</code> | <code>Phone</code> | <code>Location</code>
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+We built a custom 24/7 WhatsApp AI Assistant specifically for {lead['Company']}:
+- Instantly responds to WhatsApp inquiries in under 3 seconds (Arabic, English, and Hindi).
+- Brokers can add new property listings or mark units as SOLD directly via WhatsApp text.
+- Qualifies buyer/tenant budget and preferred area before alerting your team.
+- Sends property photos and schedules viewing visits automatically.
+
+🔗 Test your company's dedicated interactive demo here:
+{custom_demo_link}
+
+🔥 Special Launch Offer:
+Get the full system operational for just AED 250 for Month 1, plus 1 additional month of full technical support for FREE (Total 2 months for AED 250).
+
+Would you be open to a quick 3-minute chat this week?
+
+Best regards,
+ApexLead Team Dubai"""
+            else:
+                email_subj = f"استفسار بخصوص أتمتة رسائل الواتساب لشركة [{lead['Company']}]"
+                email_body = f"""تحية طيبة لفريق العمل في [{lead['Company']}]،
+
+لاحظنا نشاطكم وعروضكم العقارية المميزة في منطقة {lead['Location']}.
+
+ندرك أن سرعة الرد على استفسارات العملاء خارج ساعات العمل الرسمية وفي عطلات نهاية الأسبوع ترفع نسبة حجز المعاينات وتأكيد الصفقات لأكثر من ستين بالمائة.
+
+قمنا بتطوير نظام ذكي مخصص لشركتكم:
+١. رد فوري على رسائل الواتساب خلال ثلاث ثوان على مدار أربع وعشرين ساعة باللغات العربية والإنجليزية والهندية.
+٢. إمكانية إضافة العقارات الجديدة أو شطب العقارات المباعة مباشرة عبر رسالة واتساب عادية من الوسيط.
+٣. فرز ميزانية المستأجر أو المشتري وتحديد طلبه بدقة قبل تحويله لكم.
+٤. إرسال صور العقارات وتثبيت مواعيد المعاينة آلياً.
+
+رابط التجربة التفاعلية المباشرة المخصص لشركتكم:
+{custom_demo_link}
+
+🔥 عرض الإطلاق الخاص:
+نقدم لكم النظام بالكامل للشهر الأول مقابل ٢٥٠ درهم فقط، مع شهر إضافي كامل من المتابعة والدعم الفني مجاناً (شهرين كاملين مقابل ٢٥٠ درهم فقط).
+
+يسعدنا ترتيب محادثة قصيرة للاطلاع على النظام في الوقت الذي يناسبكم.
+
+وتفضلوا بقبول فائق الاحترام والتقدير،
+فريق التطوير والأتمتة"""
+
+            encoded_subj = urllib.parse.quote(email_subj)
+            encoded_body = urllib.parse.quote(email_body)
+            gmail_web_link = f"https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to={lead['Email']}&su={encoded_subj}&body={encoded_body}"
+            wa_text = f"Hi {lead['Company']} team, I prepared a custom WhatsApp AI demo for your {lead['Location']} listings: {custom_demo_link}\n\nOur launch offer is AED 250 for 2 months."
+            wa_phone = str(lead['Phone']).replace('+', '').replace(' ', '')
+            wa_link = f"https://wa.me/{wa_phone}?text={urllib.parse.quote(wa_text)}"
+
+            st.markdown(f"""
+            <div class="sme-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <div>
+                        <span style="font-size:18px; font-weight:800; color:#ffffff;">🏢 {lead['Company']}</span>
+                        &nbsp;&nbsp;<span style="background:#064e3b; color:#34d399; padding:3px 8px; border-radius:4px; font-size:12px; font-weight:700;">📍 {lead['Location']}</span>
+                    </div>
+                    <div>
+                        <span class="offer-badge">🔥 AED 250 Offer</span>
+                    </div>
+                </div>
+                <p style="color:#94a3b8; font-size:13px; margin-bottom:10px;">
+                    ✉️ <b>Email:</b> <span style="color:#38bdf8;">{lead['Email']}</span> | 📞 <b>Phone:</b> {lead['Phone']}
+                </p>
+                <div style="background:#080c14; border:1px solid #1e293b; padding:10px 14px; border-radius:6px; font-size:13px; color:#38bdf8; margin-bottom:12px; word-break:break-all;">
+                    🔗 <b>Client Dedicated Demo Link:</b> <a href="{custom_demo_link}" target="_blank" style="color:#38bdf8;">{custom_demo_link}</a>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.text_area(f"Proposal text for {lead['Company']}:", email_body, height=130, key=f"txt_{idx}")
+
+            c1, c2 = st.columns(2)
+            with c1:
+                st.markdown(f'<a href="{gmail_web_link}" target="_blank" class="btn-gmail-red">🔴 Open Direct in Web Gmail</a>', unsafe_allow_html=True)
+            with c2:
+                st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-wa-green">💬 Send WhatsApp Pitch</a>', unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
 
     # --- Screen 2: WhatsApp Property Operations ---
     elif admin_menu == "📥 WhatsApp Property Operations (إدارة العقارات)":
@@ -429,105 +481,7 @@ else:
         inv_df = pd.DataFrame(st.session_state.property_inventory)
         st.dataframe(inv_df, use_container_width=True, hide_index=True)
 
-    # --- Screen 4: Active Outreach & Dedicated Demos ---
-    elif admin_menu == "🎯 Active Outreach & Dedicated Demos (العروض الحية)":
-        st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>🎯 Active Outreach & Dedicated Demos</h1>", unsafe_allow_html=True)
-        
-        leads_to_show = st.session_state.custom_imported_leads
-        
-        if not leads_to_show:
-            st.info("💡 لم يتم رفع ملف داتا بعد. يرجى التوجه إلى قسم **'📂 Import Real Leads'** ورفع ملف الداتا ليتم توليد الروابط والعروض لجميع الشركات فوراً.")
-        else:
-            lang_pref = st.radio("Proposal Language:", ["English Pitch (Corporate Dubai)", "Arabic Pitch (عربي رسمي)"], horizontal=True)
-            st.markdown("<br>", unsafe_allow_html=True)
-
-            for idx, lead in enumerate(leads_to_show):
-                custom_demo_link = f"{BASE_APP_URL}/?client={lead['id']}"
-
-                if "English" in lang_pref:
-                    email_subj = f"Quick question regarding {lead['Company']} WhatsApp inquiries"
-                    email_body = f"""Hi {lead.get('Decision_Maker', 'Management Team')} & team at {lead['Company']},
-
-I noticed your active property listings in {lead['Location']}.
-
-For boutique teams, replying to Meta and Instagram ad inquiries after 8 PM or on weekends often causes serious buyer drop-offs.
-
-We built a custom 24/7 WhatsApp AI Assistant specifically for {lead['Company']}:
-- Instantly responds to WhatsApp inquiries in under 3 seconds (Arabic, English, and Hindi).
-- Brokers can add new property listings or mark units as SOLD directly via WhatsApp text.
-- Qualifies buyer/tenant budget and preferred area before alerting your team.
-- Sends property photos and schedules viewing visits automatically.
-
-🔗 Test your company's dedicated interactive demo here:
-{custom_demo_link}
-
-🔥 Special Launch Offer:
-Get the full system operational for just AED 250 for Month 1, plus 1 additional month of full technical support for FREE (Total 2 months for AED 250).
-
-Would you be open to a quick 3-minute chat this week?
-
-Best regards,
-ApexLead Team Dubai"""
-                else:
-                    email_subj = f"استفسار بخصوص أتمتة رسائل الواتساب لشركة [{lead['Company']}]"
-                    email_body = f"""تحية طيبة لفريق العمل في [{lead['Company']}]،
-
-لاحظنا نشاطكم وعروضكم العقارية المميزة في منطقة {lead['Location']}.
-
-ندرك أن سرعة الرد على استفسارات العملاء خارج ساعات العمل الرسمية وفي عطلات نهاية الأسبوع ترفع نسبة حجز المعاينات وتأكيد الصفقات لأكثر من ستين بالمائة.
-
-قمنا بتطوير نظام ذكي مخصص لشركتكم:
-١. رد فوري على رسائل الواتساب خلال ثلاث ثوان على مدار أربع وعشرين ساعة باللغات العربية والإنجليزية والهندية.
-٢. إمكانية إضافة العقارات الجديدة أو شطب العقارات المباعة مباشرة عبر رسالة واتساب عادية من الوسيط.
-٣. فرز ميزانية المستأجر أو المشتري وتحديد طلبه بدقة قبل تحويله لكم.
-٤. إرسال صور العقارات وتثبيت مواعيد المعاينة آلياً.
-
-رابط التجربة التفاعلية المباشرة المخصص لشركتكم:
-{custom_demo_link}
-
-🔥 عرض الإطلاق الخاص:
-نقدم لكم النظام بالكامل للشهر الأول مقابل ٢٥٠ درهم فقط، مع شهر إضافي كامل من المتابعة والدعم الفني مجاناً (شهرين كاملين مقابل ٢٥٠ درهم فقط).
-
-يسعدنا ترتيب محادثة قصيرة للاطلاع على النظام في الوقت الذي يناسبكم.
-
-وتفضلوا بقبول فائق الاحترام والتقدير،
-فريق التطوير والأتمتة"""
-
-                encoded_subj = urllib.parse.quote(email_subj)
-                encoded_body = urllib.parse.quote(email_body)
-                gmail_web_link = f"https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to={lead['Email']}&su={encoded_subj}&body={encoded_body}"
-                wa_text = f"Hi {lead['Company']} team, I prepared a custom WhatsApp AI demo for your {lead['Location']} listings: {custom_demo_link}\n\nOur launch offer is AED 250 for 2 months."
-                wa_phone = str(lead['Phone']).replace('+', '').replace(' ', '')
-                wa_link = f"https://wa.me/{wa_phone}?text={urllib.parse.quote(wa_text)}"
-
-                st.markdown(f"""
-                <div class="sme-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                        <div>
-                            <span style="font-size:18px; font-weight:800; color:#ffffff;">🏢 {lead['Company']}</span>
-                            &nbsp;&nbsp;<span style="background:#064e3b; color:#34d399; padding:3px 8px; border-radius:4px; font-size:12px; font-weight:700;">📍 {lead['Location']}</span>
-                        </div>
-                        <div>
-                            <span class="offer-badge">🔥 AED 250 Offer</span>
-                        </div>
-                    </div>
-                    <p style="color:#94a3b8; font-size:13px; margin-bottom:10px;">
-                        ✉️ <b>Email:</b> <span style="color:#38bdf8;">{lead['Email']}</span> | 📞 <b>Phone:</b> {lead['Phone']}
-                    </p>
-                    <div style="background:#080c14; border:1px solid #1e293b; padding:10px 14px; border-radius:6px; font-size:13px; color:#38bdf8; margin-bottom:12px; word-break:break-all;">
-                        🔗 <b>Client Dedicated Demo Link:</b> <a href="{custom_demo_link}" target="_blank" style="color:#38bdf8;">{custom_demo_link}</a>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-
-                c1, c2 = st.columns(2)
-                with c1:
-                    st.markdown(f'<a href="{gmail_web_link}" target="_blank" class="btn-gmail-red">🔴 Open Direct in Web Gmail</a>', unsafe_allow_html=True)
-                with c2:
-                    st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-wa-green">💬 Send WhatsApp Pitch</a>', unsafe_allow_html=True)
-                st.markdown("<br>", unsafe_allow_html=True)
-
-    # --- Screen 5: Pricing Strategy ---
+    # --- Screen 4: Pricing Strategy ---
     elif admin_menu == "📊 Launch Pricing & Scaling Model":
         st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📊 Pricing Strategy & Scalability</h1>", unsafe_allow_html=True)
         pricing_df = pd.DataFrame([
