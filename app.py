@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import urllib.parse
+import random
 import time
 
 st.set_page_config(
@@ -148,9 +149,9 @@ st.markdown("""
 # --------------------------------------------------
 if 'property_inventory' not in st.session_state:
     st.session_state.property_inventory = [
-        {"ID": "DXB-101", "Title": "Luxury 1BR Canal View", "Location": "Business Bay", "Type": "Apartment", "Price": "AED 85,000 / yr", "Status": "🟢 Available", "Added_By": "WhatsApp Auto-Ingest"},
+        {"ID": "DXB-101", "Title": "Luxury 1BR Canal View", "Location": "Business Bay", "Type": "Apartment", "Price": "AED 85,000 / yr", "Status": "🟢 Available", "Added_By": "WhatsApp Ingest"},
         {"ID": "DXB-102", "Title": "Furnished Holiday Studio", "Location": "Jumeirah Village Circle (JVC)", "Type": "Studio", "Price": "AED 5,400 / mo", "Status": "🟢 Available", "Added_By": "Direct System"},
-        {"ID": "DXB-103", "Title": "2BR Marina Panoramic", "Location": "Dubai Marina", "Type": "Apartment", "Price": "AED 135,000 / yr", "Status": "🟡 Pending Viewing", "Added_By": "WhatsApp Auto-Ingest"},
+        {"ID": "DXB-103", "Title": "2BR Marina Panoramic", "Location": "Dubai Marina", "Type": "Apartment", "Price": "AED 135,000 / yr", "Status": "🟢 Available", "Added_By": "WhatsApp Ingest"},
     ]
 
 VERIFIED_DUBAI_SME_LEADS = [
@@ -162,13 +163,23 @@ VERIFIED_DUBAI_SME_LEADS = [
 
 if 'broker_chat' not in st.session_state:
     st.session_state.broker_chat = [
-        {"sender": "user", "text": "وصلتنا شقة جديدة للبيع في داون تاون برج فيستا، غرفتين وصالة، إطلالة على البوليفارد، السعر 2.8 مليون درهم."},
-        {"sender": "bot", "text": "تم استلام العقار الجديد بنجاح 🌟 لتحليله وتحديث قاعدة بيانات المبيعات، يرجى تزويدي بالآتي:\n1. كم المساحة الإجمالية بالقدم المربع؟\n2. هل الشقة مفروشة أم غير مفروشة؟\n3. يرجى إرسال الصور والمخطط لحفظها."},
+        {"sender": "user", "text": "وصلتنا شقة جديدة للبيع في داون تاون برج فيستا، غرفتين وصالة، السعر 2.8 مليون درهم."},
+        {"sender": "bot", "text": "تم استلام العقار الجديد بنجاح 🌟 لتحليله وتحديث قاعدة بيانات المبيعات، يرجى تزويدي بالآتي:\n1. كم المساحة الإجمالية بالقدم المربع؟\n2. هل الشقة مفروشة أم غير مفروشة؟"},
     ]
 
 query_params = st.query_params
 client_id = query_params.get("client", None)
 view_mode = query_params.get("view", "client" if client_id else "admin")
+
+# Helper to get active available units
+def get_available_units_text():
+    available = [p for p in st.session_state.property_inventory if "Available" in p['Status']]
+    if not available:
+        return "كافة العقارات الحالية قيد الإجراءات، يرجى تزويدنا بطلبكم لنوافيكم بالعروض الجديدة فور طرحها."
+    lines = []
+    for p in available:
+        lines.append(f"• {p['Title']} في {p['Location']} ({p['Price']})")
+    return "\n".join(lines)
 
 # --------------------------------------------------
 # 🌟 1. CLIENT DEDICATED DEMO VIEW
@@ -197,7 +208,7 @@ if view_mode == "client" or client_id:
     if 'client_chat' not in st.session_state:
         st.session_state.client_chat = [
             {"sender": "user", "text": "مرحبا، شفت إعلانكم بخصوص الشقق في دبي، شو في خيارات متوفرة عندكم؟"},
-            {"sender": "bot", "text": f"أهلاً وسهلاً بك في {matched_company} 🌟 متاح لدينا حالياً خيارات مميزة ومجهزة:\n• استوديو مفروش في JVC (٥,٤٠٠ درهم شهرياً شامل الفواتير)\n• شقة غرفة وصالة بإطلالة القناة المائية في الخليج التجاري (٨٥,٠٠٠ درهم سنوياً)\n• شقة غرفتين فاخرة في دبي مارينا (١٣٥,٠٠٠ درهم سنوياً).\nما هي المنطقة أو الميزانية الأنسب لطلبكم؟"},
+            {"sender": "bot", "text": f"أهلاً وسهلاً بك في {matched_company} 🌟 متاح لدينا حالياً خيارات نشطة ومحدثة في قاعدة البيانات:\n{get_available_units_text()}\n\nما هي المنطقة أو الميزانية الأنسب لطلبكم؟"},
         ]
 
     st.markdown(f"""
@@ -224,7 +235,7 @@ if view_mode == "client" or client_id:
     with st.form("client_sim_form", clear_on_submit=True):
         col_in1, col_in2 = st.columns([4, 1.2])
         with col_in1:
-            client_input = st.text_input("Test inquiry (Arabic, English, or Hindi)...", placeholder="e.g. كم سعر شقة الخليج التجاري؟ / What is available in Marina? / بدي عاين الشقة", label_visibility="collapsed")
+            client_input = st.text_input("Test inquiry (Arabic, English, or Hindi)...", placeholder="e.g. شو في خيارات متاحة؟ / كم السعر؟ / بدي شقة مارينا", label_visibility="collapsed")
         with col_in2:
             send_btn = st.form_submit_button("Send 💬", type="primary", use_container_width=True)
 
@@ -232,7 +243,10 @@ if view_mode == "client" or client_id:
             st.session_state.client_chat.append({"sender": "user", "text": client_input})
             lower_in = client_input.strip().lower()
 
-            if any(w in lower_in for w in ["معاينة", "موعد", "حجز", "بدي شوف", "عاين", "viewing"]):
+            # Check if asking about available options dynamically
+            if any(w in lower_in for w in ["خيارات", "متوفر", "متاح", "عروض", "available", "options"]):
+                reply = f"العقارات المتاحة حالياً لدينا في {matched_company}:\n{get_available_units_text()}\n\nهل تفضل حجز موعد للمعاينة لأي منها اليوم؟"
+            elif any(w in lower_in for w in ["معاينة", "موعد", "حجز", "بدي شوف", "عاين", "viewing"]):
                 reply = "يسعدنا ترتيب موعد لمعاينة الشقة اليوم الساعة الخامسة مساءً أو غداً الساعة الحادية عشرة صباحاً. أي الموعدين يناسب جدولكم الكريم؟"
             elif any(w in lower_in for w in ["كم السعر", "كم الإيجار", "الأسعار", "بكم", "price", "rent"]):
                 reply = "تبدأ الإيجارات الشهرية من ٥,٤٠٠ درهم شاملة لكافة الفواتير، والسنوية تبدأ من ٨٥,٠٠٠ درهم بتسهيلات دفع مرنة. هل تفضل الإيجار الشهري أم السنوي؟"
@@ -268,24 +282,29 @@ else:
         """, unsafe_allow_html=True)
 
         admin_menu = st.radio("Admin Navigation", [
-            "📥 Auto-Ingest Properties via WhatsApp (إضافة العقارات الذكية)",
-            "📋 Real-Time Property Inventory (قائمة العقارات النشطة)",
+            "📥 WhatsApp Property Operations (إضافة وتحديث وبيع العقارات)",
+            "📋 Real-Time Property Inventory (قائمة العقارات النشطة والمباعة)",
             "🎯 Verified Lead Outreach & Demos (حملات التواصل)",
             "📊 Launch Pricing & Scaling Model"
         ])
+        
+        available_cnt = len([p for p in st.session_state.property_inventory if "Available" in p['Status']])
+        sold_cnt = len([p for p in st.session_state.property_inventory if "SOLD" in p['Status']])
+
         st.markdown("<br><hr style='border-color:#334155;'><br>", unsafe_allow_html=True)
         st.markdown(f"""
         <div style='background:#1e293b; padding:14px; border-radius:8px; border:1px solid #475569;'>
-            <b style='color:#10b981; font-size:13.5px !important;'>Live Inventory:</b><br>
-            <span style='color:#f8fafc; font-size:13px !important;'>{len(st.session_state.property_inventory)} Active Units in Dubai</span><br>
-            <span style='color:#38bdf8; font-size:12.5px !important;'>WhatsApp Bot Synchronized ⚡</span>
+            <b style='color:#10b981; font-size:13.5px !important;'>Live Inventory Status:</b><br>
+            <span style='color:#34d399; font-size:13px !important;'>🟢 {available_cnt} Available for Sale/Rent</span><br>
+            <span style='color:#ef4444; font-size:13px !important;'>🔴 {sold_cnt} Closed / Sold Units</span><br><br>
+            <span style='color:#38bdf8; font-size:12px !important;'>Auto-Sync Active ⚡</span>
         </div>
         """, unsafe_allow_html=True)
 
-    # --- Screen 1: Auto-Ingest Properties via WhatsApp ---
-    if admin_menu == "📥 Auto-Ingest Properties via WhatsApp (إضافة العقارات الذكية)":
-        st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📥 Conversational WhatsApp Property Ingestion</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>محاكاة حية توضح كيف يقوم الوسيط بإرسال رسالة عادية بالواتساب، وكيف يستفسر منه الذكاء الاصطناعي ويضيف العقار آلياً إلى قاعدة البيانات.</p>", unsafe_allow_html=True)
+    # --- Screen 1: WhatsApp Property Operations (Add / Sell) ---
+    if admin_menu == "📥 WhatsApp Property Operations (إضافة وتحديث وبيع العقارات)":
+        st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📥 Conversational WhatsApp Property Management</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>محاكاة كاملة: إرسال عقار جديد للإضافة، أو كتابة رسالة بيع (مثل: <i>'تم بيع شقة مارينا'</i>) ليتم شطبها تلقائياً من عروض المشترين.</p>", unsafe_allow_html=True)
 
         col_b_chat, col_b_info = st.columns([1.2, 1], gap="large")
 
@@ -295,8 +314,8 @@ else:
                 <div class="wa-topbar">
                     <div style="background:#0284c7; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; color:white;">🏢</div>
                     <div>
-                        <div style="font-weight:700; color:#e9edef; font-size:14.5px;">Internal Agency Ingestion Bot (خاص بالوسطاء)</div>
-                        <div style="font-size:11.5px; color:#38bdf8;">Active Property Ingestion Listener</div>
+                        <div style="font-weight:700; color:#e9edef; font-size:14.5px;">Agency Broker Ingestion & Close Bot</div>
+                        <div style="font-size:11.5px; color:#38bdf8;">Listening for New Listings & Sold Triggers</div>
                     </div>
                 </div>
             </div>
@@ -307,47 +326,68 @@ else:
                 if msg['sender'] == 'user':
                     chat_html += f"<div class='msg-user'><b>الوسيط (Broker):</b><br>{msg['text'].replace(chr(10), '<br>')}</div>"
                 else:
-                    chat_html += f"<div class='msg-bot'><b>AI Ingestion Core:</b><br>{msg['text'].replace(chr(10), '<br>')}</div>"
+                    chat_html += f"<div class='msg-bot'><b>AI Property Manager:</b><br>{msg['text'].replace(chr(10), '<br>')}</div>"
             chat_html += "</div></div>"
             st.markdown(chat_html, unsafe_allow_html=True)
 
-            with st.form("broker_ingest_form", clear_on_submit=True):
-                broker_in = st.text_input("أرسل رسالة كأنك وسيط يضيف عقاراً جديداً...", placeholder="مثال: مفروشة، مساحتها 1350 قدم مربع، والسعر 2.8 مليون درهم كاش")
+            with st.form("broker_ops_form", clear_on_submit=True):
+                broker_in = st.text_input("جرب: كتابة 'تم بيع شقة مارينا' أو 'أضف شقة جديدة بالداون تاون'...", placeholder="اكتب رسالة الوسيط هنا...")
                 if st.form_submit_button("إرسال التحديث للذكاء الاصطناعي 💬", type="primary", use_container_width=True) and broker_in:
                     st.session_state.broker_chat.append({"sender": "user", "text": broker_in})
-                    
-                    # Auto-add to inventory
-                    new_id = f"DXB-{random.randint(104, 199)}"
-                    st.session_state.property_inventory.insert(0, {
-                        "ID": new_id,
-                        "Title": "2BR Burj Vista Luxury",
-                        "Location": "Downtown Dubai",
-                        "Type": "Apartment",
-                        "Price": "AED 2,800,000 Cash",
-                        "Status": "🟢 Available (Live)",
-                        "Added_By": "WhatsApp Auto-Ingest"
-                    })
+                    lower_b = broker_in.lower()
 
-                    reply_bot = f"تم اعتماد العقار وحفظه بنجاح برقم رمزي [{new_id}] ✅\n• الموقع: Downtown Dubai\n• السعر: 2,800,000 درهم\n• الحالة: متاح للبيع فوراً.\nتم تحديث محرك المبيعات تلقائياً، والآن أي عميل يستفسر على الواتساب سيتم ترشيح هذا العقار له مباشرة!"
-                    st.session_state.broker_chat.append({"sender": "bot", "text": reply_bot})
+                    # --- Trigger 1: Mark Property as Sold / Rented ---
+                    if any(w in lower_b for w in ["بيع", "تم بيع", "تأجرت", "حجزت", "انباعت", "sold", "rented", "closed"]):
+                        # Check which property matches
+                        target_updated = False
+                        for p in st.session_state.property_inventory:
+                            if any(k in lower_b for k in [p['Location'].lower(), p['Type'].lower(), p['Title'].lower(), "مارينا", "jvc", "business bay", "استوديو"]):
+                                if "Available" in p['Status']:
+                                    p['Status'] = "🔴 SOLD / RENTED"
+                                    target_updated = True
+                                    bot_reply = f"مبروك إتمام الصفقة! 🎉 تم تحديث حالة العقار [{p['Title']} - {p['Location']}] إلى [🔴 SOLD / RENTED] وشطبه فوراً من قائمة العروض.\nلن يتم ترشيحه لأي عميل جديد على الواتساب."
+                                    break
+                        if not target_updated:
+                            # Fallback if specific name not matched, mark first active as sold
+                            for p in st.session_state.property_inventory:
+                                if "Available" in p['Status']:
+                                    p['Status'] = "🔴 SOLD / RENTED"
+                                    bot_reply = f"ألف مبروك! تم تحديث حالة العقار [{p['Title']}] إلى [🔴 SOLD] وإيقاف ظهوره للعملاء فوراً."
+                                    break
+
+                    # --- Trigger 2: Add New Property ---
+                    else:
+                        new_id = f"DXB-{random.randint(104, 199)}"
+                        st.session_state.property_inventory.insert(0, {
+                            "ID": new_id,
+                            "Title": "Luxury 2BR Suite",
+                            "Location": "Downtown Dubai",
+                            "Type": "Apartment",
+                            "Price": "AED 2,800,000 Cash",
+                            "Status": "🟢 Available",
+                            "Added_By": "WhatsApp Auto-Ingest"
+                        })
+                        bot_reply = f"تم اعتماد العقار الجديد بنجاح برقم [{new_id}] ✅ وحفظه كـ [🟢 Available].\nتم تحديث محرك المبيعات وسيتم ترشيحه للمشترين الجدد فوراً!"
+
+                    st.session_state.broker_chat.append({"sender": "bot", "text": bot_reply})
                     st.rerun()
 
         with col_b_info:
             st.markdown("""
             <div class="sme-card">
-                <h3 style="margin-top:0; color:#ffffff; font-size:18px;">💡 لماذا يعشق أصحاب الشركات هذه الميزة؟</h3>
+                <h3 style="margin-top:0; color:#ffffff; font-size:18px;">💡 الأتمتة الكاملة لدورة حياة العقار:</h3>
                 <ul style="color:#cbd5e1; font-size:13.5px; line-height:1.8; padding-left:20px; margin-bottom:0;">
-                    <li><b>الوسطاء لا يستخدمون اللابتوب:</b> الوسيط في دبي دائماً في الشارع؛ هذه الميزة تسمح له بإرسال تفاصيل الشقة بالصوت أو النص عبر الواتساب لتُسجل فوراً.</li>
-                    <li><b>الذكاء الاصطناعي يسأل عن النواقص:</b> إذا نسي الوسيط ذكر السعر أو الموقع، يطلب منه البوت إكمال البيانات قبل نشرها.</li>
-                    <li><b>تزامن فوري مع المشترين:</b> تصبح الشقة جاهزة للإرسال فوراً لأي عميل مهتم في نفس اللحظة دون انتظار إدخال البيانات يدوياً.</li>
+                    <li><b>شطب فوري عند البيع:</b> لا مزيد من الإحراج أو إضاعة وقت المشترين على عقارات مباعة.</li>
+                    <li><b>تحويل ذكي للعميل:</b> إذا سأل زائر عن شقة تم بيعها، يقترح النظام شقة بديلة بنفس المنطقة والميزانية مباشرة.</li>
+                    <li><b>سهولة مطلقة للوسيط:</b> إرسال رسالة نصية بسيطة مثل <i>"تم بيع الشقة"</i> يكفي لتحديث كامل المنظومة وقاعدة البيانات في ثانية واحدة.</li>
                 </ul>
             </div>
             """, unsafe_allow_html=True)
 
     # --- Screen 2: Real-Time Property Inventory ---
-    elif admin_menu == "📋 Real-Time Property Inventory (قائمة العقارات النشطة)":
+    elif admin_menu == "📋 Real-Time Property Inventory (قائمة العقارات النشطة والمباعة)":
         st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📋 Real-Time Property Inventory (قاعدة البيانات المباشرة)</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>العقارات النشطة التي يستعين بها الذكاء الاصطناعي للرد على العملاء وحساب الأسعار تلقائياً:</p>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>العقارات المحدثة لحظياً عبر الواتساب مع تمييز العقارات المتاحة والمباعة:</p>", unsafe_allow_html=True)
 
         inv_df = pd.DataFrame(st.session_state.property_inventory)
         st.dataframe(inv_df, use_container_width=True, hide_index=True)
@@ -373,7 +413,7 @@ For boutique teams of {lead['Team_Size']}, replying to Meta and Instagram ad inq
 
 We built a custom 24/7 WhatsApp AI Assistant specifically for {lead['Company']}:
 - Instantly responds to WhatsApp inquiries in under 3 seconds (Arabic, English, and Hindi).
-- Brokers can add new property listings directly by texting WhatsApp, and the AI updates inventory automatically.
+- Brokers can add new property listings or mark units as SOLD directly via WhatsApp text.
 - Qualifies buyer/tenant budget and preferred area before alerting your team.
 - Sends property photos and schedules viewing visits automatically.
 
@@ -397,7 +437,7 @@ ApexLead Team Dubai"""
 
 قمنا بتطوير نظام ذكي مخصص للشركات العقارية المتوسطة في دبي:
 ١. رد فوري على رسائل الواتساب خلال ثلاث ثوان على مدار أربع وعشرين ساعة باللغات العربية والإنجليزية والهندية.
-٢. إمكانية إضافة وتحديث العقارات الجديدة للوسطاء مباشرة عبر رسالة واتساب عادية دون الحاجة للابتوب.
+٢. إمكانية إضافة العقارات الجديدة أو شطب العقارات المباعة مباشرة عبر رسالة واتساب عادية من الوسيط.
 ٣. فرز ميزانية المستأجر أو المشتري وتحديد طلبه بدقة قبل تحويله لكم.
 ٤. إرسال صور العقارات وتثبيت مواعيد المعاينة آلياً.
 
