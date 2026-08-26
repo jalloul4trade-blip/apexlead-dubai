@@ -187,53 +187,62 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 🗄️ Deep Enterprise Intelligence Database (Audited Metrics)
+# 🗄️ Comprehensive Deep Enterprise Database (Pure Structured Metrics)
 # --------------------------------------------------
 DUBAI_DEEP_AUDIT_DATA = [
     {
         "Company": "Driven Properties",
         "Category": "Luxury Real Estate & Advisory",
         "Headquarters": "Bay Square, Business Bay",
-        "Branches": "6 Branches (Bay Square, Palm Jumeirah, Dubai Hills, City Walk, St. Regis, China Desk)",
+        "Branches": "6 Major Hubs (Bay Square, Palm Jumeirah, Dubai Hills, City Walk, St. Regis, China Desk)",
         "Brokers_Count": "350+ Licensed Brokers",
         "Decision_Maker": "Abdullah Alajaji (Founder & CEO) / Sales Operations Directors",
         "Email": "info@drivenproperties.com",
         "Phone": "+97144297040",
         "Est_Ad_Spend": "AED 120,000 / month",
-        "Detected_Leak": "فقدان ما يقارب 38% من استفسارات الحملات الإعلانية على إنستغرام وتيك توك بعد الساعة 8 مساءً وفي عطلات نهاية الأسبوع قبل وصولها للوسيط المختص.",
-        "Revenue_Leak_AED": "AED 420,000 شهرياً (قيمة عمولات مهدورة)",
-        "Projected_Uplift": "+28% في معدل حجز المعاينات المؤكدة (+ AED 2.8M عمولات إضافية سنوياً)",
-        "Strategic_Value": "ربط ذكي فوري بين إعلانات المشاريع الفاخرة و350 وسيط عقاري مع فلترة الميزانية واللغة (عربي/هندي/إنجليزي/روسي) في 3 ثوانٍ."
+        "Pain_EN": "Estimated 38% dropoff on Meta/Instagram luxury project leads during off-hours (8 PM - 9 AM) prior to broker assignment.",
+        "Revenue_Leak_EN": "AED 420,000 / month in lost gross commissions",
+        "Projected_Uplift_EN": "+28% increase in qualified viewing conversions (+AED 2.8M annual commission uplift)",
+        "Strategic_Value_EN": "Instant 3-second multilingual routing (Arabic/Hindi/English/Russian) matching 350+ brokers to verified buyers.",
+        "Pain_AR": "فقدان ما يقارب 38% من استفسارات الحملات الإعلانية على إنستغرام وتيك توك بعد الساعة 8 مساءً قبل وصولها للوسيط المختص.",
+        "Revenue_Leak_AR": "420,000 درهم شهرياً في العمولات الضائعة",
+        "Projected_Uplift_AR": "+28% في معدل حجز المعاينات المؤكدة (+2.8 مليون درهم سنوياً)"
     },
     {
         "Company": "bnbme Holiday Homes",
         "Category": "Luxury Holiday Homes Management",
         "Headquarters": "Jumeirah Village Circle (JVC)",
-        "Branches": "Global Operations (Dubai JVC, Downtown, Marina, Mumbai, Lisbon)",
-        "Brokers_Count": "50+ Property & Hospitality Managers",
+        "Branches": "Global Hubs (Dubai JVC, Downtown, Marina, Mumbai, Lisbon)",
+        "Brokers_Count": "50+ Property Managers & Reservation Specialists",
         "Decision_Maker": "Vinayak Mahtani (CEO) / Head of Reservations",
         "Email": "reservations@bnbmehomes.com",
         "Phone": "+971585836263",
         "Est_Ad_Spend": "AED 65,000 / month",
-        "Detected_Leak": "تأخر الرد على استفسارات السياح الخليجيين والهنود والأوروبيين في فترات الليل وفرق التوقيت، مما يدفعهم للحجز الفوري عبر منصات بديلة تقتطع عمولات أعلى.",
-        "Revenue_Leak_AED": "AED 180,000 شهرياً (حجوزات مباشرة ضائعة)",
-        "Projected_Uplift": "+35% في الحجوزات المباشرة (Direct Bookings) دون عمولات المنصات الوسيطة",
-        "Strategic_Value": "تسعير ديناميكي، رد آلي فوري بـ 4 لغات، وإصدار روابط الدفع والتأمين اللحظية على مدار 24 ساعة."
+        "Pain_EN": "Delayed responses to international tourists across timezones, forcing direct booking dropoffs to high-commission OTAs.",
+        "Revenue_Leak_EN": "AED 180,000 / month in direct booking margins",
+        "Projected_Uplift_EN": "+35% direct booking conversion rate without portal commissions",
+        "Strategic_Value_EN": "24/7 autonomous pricing quotes, multilingual instant responses, and automated payment link generation.",
+        "Pain_AR": "تأخر الرد على استفسارات السياح في فترات الليل، مما يدفعهم للحجز عبر منصات وسيطة تقتطع عمولات أعلى.",
+        "Revenue_Leak_AR": "180,000 درهم شهرياً في هوامش الحجز المباشر",
+        "Projected_Uplift_AR": "+35% زيادة في الحجوزات المباشرة دون عمولات وسيطة"
     },
     {
         "Company": "Allsopp & Allsopp",
         "Category": "Residential Real Estate Agency",
         "Headquarters": "Motor City / Dubai Marina",
         "Branches": "5 Hubs (Motor City, Dubai Marina, Springs Souk, JGE, Business Bay)",
-        "Brokers_Count": "400+ Agents",
+        "Brokers_Count": "400+ Licensed Agents",
         "Decision_Maker": "Lewis Allsopp (CEO) / Head of Performance Marketing",
         "Email": "sales@allsoppandallsopp.com",
         "Phone": "+97144294444",
         "Est_Ad_Spend": "AED 160,000 / month",
-        "Detected_Leak": "إرهاق الوسطاء بمئات الاتصالات والرسائل غير المؤهلة (ميزانيات منخفضة أو طلبات غير مطابقة) مما يقلل وقت التركيز على المشترين الكاش والـ VIP.",
-        "Revenue_Leak_AED": "AED 550,000 شهرياً (تكلفة وقت الوسطاء والفرص البديلة)",
-        "Projected_Uplift": "+40% كفاءة إنتاجية للوسطاء مع توجيه الصفقات الساخنة فقط (+AED 4.2M سنوياً)",
-        "Strategic_Value": "فرز وتأهيل ميزانيات المشترين رقمياً وجدولة المعاينات مباشرة في تقويم الوسطاء دون أي تدخل يدوي."
+        "Pain_EN": "Brokers overloaded with unqualified low-budget inquiries, reducing critical closing time for cash and VIP investors.",
+        "Revenue_Leak_EN": "AED 550,000 / month in broker productivity and lost opportunities",
+        "Projected_Uplift_EN": "+40% agent productivity gain with pre-qualified hot leads (+AED 4.2M annually)",
+        "Strategic_Value_EN": "Automated digital buyer budget qualification and direct Calendly viewing synchronization.",
+        "Pain_AR": "إرهاق الوسطاء بمئات الاتصالات غير المؤهلة مما يقلل وقت التركيز على المشترين الكاش والـ VIP.",
+        "Revenue_Leak_AR": "550,000 درهم شهرياً في تكلفة وقت الوسطاء والفرص الضائعة",
+        "Projected_Uplift_AR": "+40% كفاءة إنتاجية للوسطاء مع توجيه الصفقات الساخنة فقط"
     },
     {
         "Company": "Deluxe Holiday Homes",
@@ -245,15 +254,15 @@ DUBAI_DEEP_AUDIT_DATA = [
         "Email": "info@deluxehomes.com",
         "Phone": "+97143920202",
         "Est_Ad_Spend": "AED 80,000 / month",
-        "Detected_Leak": "المفاوضات اليدوية على أسعار الإيجار اليومي والشهري تستغرق أكثر من ساعتين لكل ضيف، مما يتسبب بإلغاء 25% من الطلبات.",
-        "Revenue_Leak_AED": "AED 210,000 شهرياً",
-        "Projected_Uplift": "+30% زيادة سرعة إتمام الحجز مع رفع معدل الإشغال الشهري إلى 92%",
-        "Strategic_Value": "نظام تفاوض ذكي ومحدد بحدود دنيا يرسل عروض الأسعار وروابط الدفع في 3 ثوانٍ."
+        "Pain_EN": "Manual pricing negotiations taking over 2 hours per guest inquiry, leading to 25% booking abandonment.",
+        "Revenue_Leak_EN": "AED 210,000 / month in lost reservations",
+        "Projected_Uplift_EN": "+30% faster booking velocity, raising average monthly occupancy to 92%",
+        "Strategic_Value_EN": "Algorithmic dynamic discounting and 3-second instant payment link dispatch.",
+        "Pain_AR": "المفاوضات اليدوية على أسعار الإيجار تستغرق وقتاً طويلاً مما يسبب إلغاء 25% من الحجوزات.",
+        "Revenue_Leak_AR": "210,000 درهم شهرياً في الحجوزات الملغاة",
+        "Projected_Uplift_AR": "+30% زيادة سرعة إتمام الحجز مع رفع معدل الإشغال إلى 92%"
     }
 ]
-
-if 'discovered_leads' not in st.session_state:
-    st.session_state.discovered_leads = DUBAI_DEEP_AUDIT_DATA
 
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = [
@@ -280,9 +289,9 @@ with st.sidebar:
     menu = st.radio(
         "Navigation",
         [
+            "📧 Executive Pitch Matrix (خطابات المبيعات التنفيذية)",
             "🎯 Enterprise Audit & Forecast (التدقيق والفرص)",
-            "📱 Live Command & Polyglot Studio (المحاكي المباشر)", 
-            "📧 Executive B2B Pitch Matrix (خطابات المبيعات العميقة)", 
+            "📱 Live Polyglot WhatsApp Studio (المحاكي المباشر)", 
             "📊 Executive CRM Pipeline"
         ],
         label_visibility="collapsed"
@@ -291,18 +300,129 @@ with st.sidebar:
     st.markdown("---")
     st.markdown(f"""
     <div style='font-size:12px; color:#94a3b8;'>
-        <b>Engine:</b> <span style='color:#10b981;'>🟢 Active Audit Core</span><br>
-        <b>Polyglot Matrix:</b> 🇦🇪 🇬🇧 🇮🇳 🇷🇺<br>
+        <b>Status:</b> <span style='color:#10b981;'>🟢 Active Enterprise Node</span><br>
+        <b>Standard:</b> Dubai Corporate English (C-Level)<br>
         <b>Live Demo:</b> {DEMO_URL}
     </div>
     """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 🎯 1. Enterprise Audit & Financial Forecast Screen
+# 📧 1. Executive Pitch Matrix Screen (Fixed Clean Alignment)
 # --------------------------------------------------
-if menu == "🎯 Enterprise Audit & Forecast (التدقيق والفرص)":
+if menu == "📧 Executive Pitch Matrix (خطابات المبيعات التنفيذية)":
+    st.markdown("<h1 style='font-size:26px; font-weight:800; color:#ffffff;'>📧 Executive B2B Pitch Matrix & Audit Proposals</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>Executive pitches formatted in Dubai corporate standard English for C-Level executives, with clean bidirectional layout.</p>", unsafe_allow_html=True)
+    
+    # Language Toggle Selector
+    pitch_lang = st.radio("Select Pitch Format / اختر لغة الخطاب التنفيذي:", ["🇬🇧 Corporate English (Dubai C-Level Standard - Recommended)", "🇦🇪 Arabic Clean Format (العربية المنضبطة)"], horizontal=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    for idx, lead in enumerate(DUBAI_DEEP_AUDIT_DATA):
+        if "English" in pitch_lang:
+            email_subj = f"Operational AI Audit & Revenue Forecast for {lead['Company']} Dubai Campaigns"
+            
+            email_body = f"""Dear {lead['Decision_Maker']} & Executive Leadership Team at {lead['Company']},
+
+We have been closely tracking your market leadership across your branches in {lead['Branches']} and your dedicated team of {lead['Brokers_Count']}.
+
+Based on our operational assessment of your estimated digital advertising spend of {lead['Est_Ad_Spend']}:
+
+1. OPERATIONAL AUDIT & IDENTIFIED REVENUE LEAKAGE:
+- {lead['Pain_EN']}
+- Estimated Financial Impact: {lead['Revenue_Leak_EN']}.
+
+2. STRATEGIC VALUE OF APEXLEAD OS:
+- Autonomous 3-second response time across 4 languages (Arabic dialects, Hindi/Hinglish, Executive English, and Russian).
+- {lead['Strategic_Value_EN']}
+- Real-time buyer budget qualification and direct broker calendar synchronization.
+
+3. PROJECTED ANNUAL REVENUE UPLIFT:
+- Implementation forecast: {lead['Projected_Uplift_EN']}.
+
+4. INTERACTIVE LIVE DEMO & SANDBOX:
+Experience the multi-lingual lead conversion engine configured for your operational model:
+{DEMO_URL}
+
+We provide your enterprise with a complimentary 7-day operational pilot to validate response speed and closing velocity with zero upfront financial commitment.
+
+We would welcome a concise 5-minute executive briefing call at your convenience.
+
+Best regards,
+
+ApexLead Enterprise Solutions Team
+Dubai, United Arab Emirates"""
+
+        else:
+            email_subj = f"تقرير التدقيق التشغيلي وتوقعات العائد المالي لشركة [{lead['Company']}]"
+            
+            email_body = f"""السادة / إدارة [{lead['Company']}] وفريق المبيعات المحترمين،
+
+تحية طيبة وبعد،
+
+نتابع باهتمام ريادتكم في سوق عقارات دبي عبر فروعكم وفريق عملكم المتميز.
+
+من واقع دراستنا لنشاطكم الإعلاني التقديري البالغ ({lead['Est_Ad_Spend']}):
+
+1. التدقيق التشغيلي ورصد التسرب المالي:
+- {lead['Pain_AR']}
+- الهدر المالي التقديري: {lead['Revenue_Leak_AR']}.
+
+2. القيمة المضافة لنظامنا الذكي:
+- استجابة فورية خلال 3 ثوانٍ بـ 4 لغات (عربي، هندي، إنجليزي، روسي) على مدار 24 ساعة.
+- فرز ميزانية المشترين وتأهيلهم آلياً قبل تحويلهم للوسطاء.
+- تثبيت مواعيد المعاينات تلقائياً في تقويم فريق المبيعات.
+
+3. العائد المالي المتوقع لشركتكم:
+- زيادة تقديرية: {lead['Projected_Uplift_AR']}.
+
+4. رابط المعاينة التفاعلية المباشرة:
+{DEMO_URL}
+
+نقدم لشركتكم فترة تجريبية مجانية لمدة 7 أيام لاختبار كفاءة النظام عملياً دون أي التزام مالي مسبق.
+
+وتفضلوا بقبول فائق التقدير والاحترام،
+
+فريق تطوير الأعمال المؤسسية
+دبي، الإمارات العربية المتحدة"""
+
+        mailto_link = f"mailto:{lead['Email']}?subject={urllib.parse.quote(email_subj)}&body={urllib.parse.quote(email_body)}"
+        
+        wa_text = f"Dear {lead['Company']} Team, I have dispatched the Operational AI Audit & Revenue Forecast to {lead['Email']}. You can also explore the live interactive demo here: {DEMO_URL}"
+        wa_link = f"https://wa.me/{lead['Phone'].replace('+', '').replace(' ', '')}?text={urllib.parse.quote(wa_text)}"
+
+        with st.container():
+            st.markdown(f"""
+            <div class="enterprise-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <div>
+                        <span style="font-size:19px; font-weight:800; color:#ffffff;">🏢 {lead['Company']}</span>
+                        &nbsp;&nbsp;<span class="tag-gold">📈 {lead['Projected_Uplift_EN' if 'English' in pitch_lang else lead['Projected_Uplift_AR']}</span>
+                    </div>
+                    <div>
+                        <span style="color:#94a3b8; font-size:13px;">Target: <b>{lead['Decision_Maker']}</b></span>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Clean Code Block Display to prevent any BiDi text distortion
+            st.caption(f"**Subject:** `{email_subj}`")
+            st.text_area("Official Executive Proposal (Click button below to open in Mail client):", email_body, height=220, key=f"pitch_box_{idx}")
+            
+            c_btn1, c_btn2 = st.columns([1, 1])
+            with c_btn1:
+                st.markdown(f'<a href="{mailto_link}" class="btn-action-primary" style="width:100%; justify-content:center;">📧 Open & Send in Email App</a>', unsafe_allow_html=True)
+            with c_btn2:
+                st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-action-wa" style="width:100%; justify-content:center;">💬 Direct WhatsApp Follow-Up</a>', unsafe_allow_html=True)
+            st.markdown("---")
+
+# --------------------------------------------------
+# 🎯 2. Enterprise Audit & Forecast Screen
+# --------------------------------------------------
+elif menu == "🎯 Enterprise Audit & Forecast (التدقيق والفرص)":
     st.markdown("<h1 style='font-size:26px; font-weight:800; color:#ffffff;'>🎯 Dubai Enterprise Operational Audit & Revenue Forecast</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>تقرير التدقيق العميق لكبرى شركات دبي: تحليل الفروع، حجم الإنفاق الإعلاني، رصد التسرب المالي، وتوقعات العائد الإضافي</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>Operational metrics, network footprint, and leakage diagnostics for audited Dubai enterprises.</p>", unsafe_allow_html=True)
     
     st.markdown(f"""
     <div class="kpi-container">
@@ -339,112 +459,41 @@ if menu == "🎯 Enterprise Audit & Forecast (التدقيق والفرص)":
                     &nbsp;<span class="tag-green">📍 HQ: {lead['Headquarters']}</span>
                 </div>
                 <div>
-                    <span class="tag-purple">💰 ميزانية الإعلانات: {lead['Est_Ad_Spend']}</span>
+                    <span class="tag-purple">💰 Ad Spend: {lead['Est_Ad_Spend']}</span>
                 </div>
             </div>
             
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; background:#0b1120; padding:15px; border-radius:10px; margin-bottom:12px; border:1px solid #1e293b;">
                 <div style="font-size:13px; color:#cbd5e1;">
-                    🏢 <b>شبكة الفروع:</b> {lead['Branches']}<br>
-                    👥 <b>فريق العمل والوسطاء:</b> {lead['Brokers_Count']}<br>
-                    👤 <b>القيادة وصناع القرار:</b> {lead['Decision_Maker']}
+                    🏢 <b>Branch Network:</b> {lead['Branches']}<br>
+                    👥 <b>Licensed Broker Force:</b> {lead['Brokers_Count']}<br>
+                    👤 <b>Executive Leadership:</b> {lead['Decision_Maker']}
                 </div>
                 <div style="font-size:13px; color:#cbd5e1;">
-                    ✉️ <b>البريد المعتمد:</b> <span style="color:#38bdf8;">{lead['Email']}</span><br>
-                    📞 <b>الهاتف الرسمي:</b> {lead['Phone']}<br>
-                    🎯 <b>القيمة المضافة:</b> {lead['Strategic_Value']}
+                    ✉️ <b>Enterprise Email:</b> <span style="color:#38bdf8;">{lead['Email']}</span><br>
+                    📞 <b>Direct Line:</b> {lead['Phone']}<br>
+                    🎯 <b>Strategic Value:</b> {lead['Strategic_Value_EN']}
                 </div>
             </div>
 
             <div style="display:grid; grid-template-columns: 1.2fr 1.2fr; gap:15px;">
                 <div style="background:#1e1b18; border-left:4px solid #ef4444; padding:10px 14px; border-radius:0 8px 8px 0; font-size:13px; color:#fca5a5;">
-                    ⚠️ <b>نقطة التسرب المالي المرصودة:</b><br>{lead['Detected_Leak']}<br>
-                    <b style="color:#f87171;">📉 الهدر التقديري: {lead['Revenue_Leak_AED']}</b>
+                    ⚠️ <b>Operational Leakage Diagnosed:</b><br>{lead['Pain_EN']}<br>
+                    <b style="color:#f87171;">📉 Estimated Monthly Loss: {lead['Revenue_Leak_EN']}</b>
                 </div>
                 <div style="background:#06281e; border-left:4px solid #10b981; padding:10px 14px; border-radius:0 8px 8px 0; font-size:13px; color:#86efac;">
-                    🚀 <b>الزيادة المتوقعة باستخدام ApexLead OS:</b><br>{lead['Projected_Uplift']}
+                    🚀 <b>Projected Performance Uplift:</b><br>{lead['Projected_Uplift_EN']}
                 </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 📧 2. Executive B2B Pitch Matrix (Deep Email Engine)
+# 📱 3. Live Polyglot WhatsApp Studio Screen
 # --------------------------------------------------
-elif menu == "📧 Executive B2B Pitch Matrix (خطابات المبيعات العميقة)":
-    st.markdown("<h1 style='font-size:26px; font-weight:800; color:#ffffff;'>📧 Executive B2B Pitch Matrix & Audit Proposals</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>خطابات تنفيذية مفصلة تتضمن بيانات الشركة وفروعها والتحليل المالي الدقيق لإغلاق الصفقات فوراً</p>", unsafe_allow_html=True)
-    
-    for idx, lead in enumerate(DUBAI_DEEP_AUDIT_DATA):
-        email_subj = f"تقرير تدقيق تشغيلي وتوقعات العائد المالي لحملات {lead['Company']} الإعلانية في دبي"
-        
-        email_body = f"""السيد/ {lead['Decision_Maker']} وفريق إدارة {lead['Company']} المحترمين،
-
-تحية طيبة وبعد،
-
-نتابع باهتمام ريادتكم في سوق العقارات بدبي عبر شبكة فروعكم في ({lead['Branches']}) وفريقكم المتميز المكون من ({lead['Brokers_Count']}).
-
-من واقع دراستنا لنشاطكم وحجم إنفاقكم الإعلاني التقديري البالغ ({lead['Est_Ad_Spend']}) على منصات Meta وGoogle:
-
-📊 1. التدقيق التشغيلي ونقاط التسرب المرصودة:
-{lead['Detected_Leak']}
-مما يمثل هدر كفاءة بيعية يُقدّر بحوالي {lead['Revenue_Leak_AED']}.
-
-⚡ 2. القيمة المضافة وحلول ApexLead OS المخصصة لشركتكم:
-- استجابة فورية خلال 3 ثوانٍ على مدار 24 ساعة بـ 4 لغات رئيسية (عربي بلهجاته، هندي Hinglish، إنجليزي تنفيذي، وروسي).
-- {lead['Strategic_Value']}
-- فرز ميزانية العميل والتحقق من المشتري الجاد قبل إشغال وقت الوسطاء.
-
-📈 3. العائد المالي المتوقع لـ {lead['Company']}:
-تطبيق النظام يحقق زيادة تقديرية قدرها {lead['Projected_Uplift']}.
-
-🌐 4. المعاينة الحية والتجربة التفاعلية:
-قمنا بتجهيز محاكاة تفاعلية مطابقة لبيئة عملكم لتمكينكم من اختبار سرعة الاستجابة وغرفة التحكم المؤسسية:
-{DEMO_URL}
-
-نقدم لشركتكم فترة تدقيق وتفعيل تجريبية مجانية لمدة 7 أيام لقياس التحسن في سرعة إغلاق الصفقات دون أي التزام مالي مسبق.
-
-يسعدنا ترتيب اتصال مرئي موجز لمدة 5 دقائق لمناقشة التقرير التفصيلي.
-
-وتفضلوا بقبول فائق التقدير والاحترام،
-ApexLead Sales & Enterprise Audit Team"""
-
-        mailto_link = f"mailto:{lead['Email']}?subject={urllib.parse.quote(email_subj)}&body={urllib.parse.quote(email_body)}"
-        wa_followup = f"مرحباً أستاذ {lead['Decision_Maker']} / فريق {lead['Company']}، أرسلت لحضرتكم تقرير التدقيق التشغيلي وتوقعات العائد المالي لحملاتكم في دبي مع رابط المنظومة التفاعلية: {DEMO_URL}"
-        wa_link = f"https://wa.me/{lead['Phone'].replace('+', '').replace(' ', '')}?text={urllib.parse.quote(wa_followup)}"
-
-        st.markdown(f"""
-        <div class="enterprise-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <div>
-                    <span style="font-size:19px; font-weight:800; color:#ffffff;">🏢 {lead['Company']}</span>
-                    &nbsp;&nbsp;<span class="tag-gold">📈 {lead['Projected_Uplift']}</span>
-                </div>
-                <div>
-                    <span style="color:#94a3b8; font-size:13px;">🎯 الموجه: <b>{lead['Decision_Maker']}</b></span>
-                </div>
-            </div>
-
-            <div style="background:#0b1120; border:1px solid #1e293b; border-radius:8px; padding:15px; margin-bottom:15px;">
-                <p style="color:#38bdf8; font-size:13px; font-weight:700; margin-bottom:8px;">الموضوع: {email_subj}</p>
-                <div style="color:#cbd5e1; font-size:13px; line-height:1.7; max-height:220px; overflow-y:auto; white-space: pre-line;">
-                    {email_body}
-                </div>
-            </div>
-
-            <div style="display:flex; justify-content:flex-end; gap:12px;">
-                <a href="{mailto_link}" class="btn-action-primary">📧 فتح وإرسال الإيميل التنفيذي الكامل</a>
-                <a href="{wa_link}" target="_blank" class="btn-action-wa">💬 متابعة عبر الواتساب</a>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-# --------------------------------------------------
-# 📱 3. Live Command & Polyglot Studio
-# --------------------------------------------------
-elif menu == "📱 Live Command & Polyglot Studio (المحاكي المباشر)":
+elif menu == "📱 Live Polyglot WhatsApp Studio (المحاكي المباشر)":
     st.markdown("<h1 style='font-size:26px; font-weight:800; color:#ffffff;'>📱 Live Polyglot WhatsApp Engine & Command Studio</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>شاشة المحاكاة التفاعلية التي يفتحها العميل من رابط الإيميل لتجربة الذكاء الاصطناعي متعدد اللغات</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>Interactive multi-lingual sandbox allowing enterprise clients to experience immediate lead qualification.</p>", unsafe_allow_html=True)
     
     col_sim, col_ctrl = st.columns([1.1, 1.3], gap="large")
     
@@ -464,20 +513,20 @@ elif menu == "📱 Live Command & Polyglot Studio (المحاكي المباشر
         chat_html = "<div class='wa-body'>"
         for msg in st.session_state.chat_history:
             if msg['sender'] == 'user':
-                chat_html += f"<div class='msg-in'><b>العميل:</b><br>{msg['text']}</div>"
+                chat_html += f"<div class='msg-in'><b>Client:</b><br>{msg['text']}</div>"
             else:
                 chat_html += f"<div class='msg-out'><b>ApexLead Agent:</b><br>{msg['text']}</div>"
         chat_html += "</div>"
         st.markdown(chat_html, unsafe_allow_html=True)
         
         with st.form("deep_chat_form", clear_on_submit=True):
-            user_msg = st.text_input("اكتب رسالة بأي لغة...", placeholder="e.g. Namaste 2BHK price / بدي شقة بمارينا إيجار سنوي")
-            if st.form_submit_button("إرسال الرسالة 💬", type="primary", use_container_width=True) and user_msg:
+            user_msg = st.text_input("Type a message in any language...", placeholder="e.g. Namaste 2BHK price / What is the ROI in Downtown? / بدي شقة بمارينا")
+            if st.form_submit_button("Send Message 💬", type="primary", use_container_width=True) and user_msg:
                 st.session_state.chat_history.append({"sender": "user", "text": user_msg})
                 lower_msg = user_msg.lower()
                 
                 if any(w in lower_msg for w in ["namaste", "bhai", "kya", "crore", "lakh", "hai", "bhk", "india", "paisa"]):
-                    reply = "Namaste ji! 🙏 Welcome to ApexLead. Expected rental ROI is 8-10% tax-free! Main aapko detailed PDF brochure (with INR ₹ conversion) WhatsApp pe share kar raha hoon. Kya hum kal viewing ya zoom call schedule karein?"
+                    reply = "Namaste ji! 🙏 Welcome to ApexLead. Expected rental ROI is 8-10% tax-free! I have dispatched the detailed PDF brochure (with INR ₹ conversion) to this WhatsApp chat. Would you like to schedule a viewing or zoom consultation tomorrow?"
                 elif any(w in lower_msg for w in ["здравствуйте", "вилла", "квартира", "дубай", "цена"]):
                     reply = "Здравствуйте! 🌟 Рады приветствовать вас. Эксклюзивные апартаменты в Дубае с доходностью до 9% годовых. Официальный PDF-буклет отправлен в этот чат."
                 elif any(w in lower_msg for w in ["طال عمرك", "هلا", "مرحبا", "شيخ", "الغالي", "شلونك"]):
@@ -493,21 +542,21 @@ elif menu == "📱 Live Command & Polyglot Studio (المحاكي المباشر
     with col_ctrl:
         st.markdown("""
         <div class="enterprise-card">
-            <h3 style="margin-top:0; color:#f8fafc; font-size:18px;">💡 لماذا يعتبر هذا الخطاب التدقيقي سلاحك الأقوى؟</h3>
+            <h3 style="margin-top:0; color:#f8fafc; font-size:18px;">💡 Why this Audit Pitch guarantees C-Level conversion:</h3>
             <ul style="color:#cbd5e1; font-size:13.5px; line-height:1.8; padding-left:20px; margin-bottom:0;">
-                <li><b>تخطي حاجز السكرتاريا (Gatekeepers):</b> الإيميل يوضح أنك قمت بدراسة أرقام الشركة وفروعها بعناية، فيتم تحويله فوراً للمدير التنفيذي.</li>
-                <li><b>تحديد حجم الخسارة المالية:</b> إظهار رقم الهدر المالي (AED Leak) يجبر الإدارة على اتخاذ قرار سريع لوقف الخسارة.</li>
-                <li><b>الرابط الحي الجاهز:</b> يضغط العميل على الرابط فيرى فوراً كيف يعمل النظام لصالحه دون الحاجة لشرح طويل.</li>
+                <li><b>Bypasses Gatekeepers:</b> Demonstrates comprehensive prior research on broker count, ad budgets, and branch network.</li>
+                <li><b>Quantified Financial Impact:</b> Directly highlights monthly commission leakage (AED Leak) to trigger urgency.</li>
+                <li><b>One-Click Interactive Sandbox:</b> Decision-makers can directly test multi-lingual responses without booking setup calls.</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 📊 4. Executive CRM Pipeline
+# 📊 4. Executive CRM Pipeline Screen
 # --------------------------------------------------
 elif menu == "📊 Executive CRM Pipeline":
     st.markdown("<h1 style='font-size:26px; font-weight:800; color:#ffffff;'>📊 Live Enterprise Pipeline & Intelligence</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>متابعة حية للصفقات المسحوبة آلياً من محادثات الواتساب مع تصنيف العملات واللغات</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>Live qualified lead pipeline captured autonomously across multilingual ad channels.</p>", unsafe_allow_html=True)
     
     pipeline_df = pd.DataFrame([
         {"Time": "09:40 AM", "Customer": "Rajesh Sharma", "Language": "🇮🇳 Hindi / English", "Property Interest": "2BHK Luxury (Business Bay)", "Budget": "AED 1,850,000 (₹4.2 Cr)", "Grade": "🔥 Ultra Hot", "Status": "Auto-Scheduled Zoom Call"},
