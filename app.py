@@ -37,15 +37,6 @@ st.markdown("""
         font-size: 14.5px !important;
         font-weight: 600 !important;
     }
-    section[data-testid="stSidebar"] .stRadio label {
-        background: #1e293b;
-        padding: 10px 14px;
-        border-radius: 8px;
-        margin-bottom: 8px;
-        border: 1px solid #475569;
-        display: flex;
-        align-items: center;
-    }
 
     .brand-box {
         display: flex;
@@ -90,33 +81,29 @@ st.markdown("""
         display: inline-block;
     }
 
-    .btn-gmail-action {
-        background: #ea4335;
+    .btn-gmail-red {
+        background: #ea4335 !important;
         color: white !important;
-        padding: 10px 16px;
+        padding: 12px 20px;
         border-radius: 8px;
         text-decoration: none;
-        font-weight: 700;
-        font-size: 13.5px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        border: 1px solid rgba(255,255,255,0.15);
+        font-weight: 800;
+        font-size: 14px;
+        display: block;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.2);
     }
-
-    .btn-wa-action {
-        background: #10b981;
+    
+    .btn-wa-green {
+        background: #10b981 !important;
         color: white !important;
-        padding: 10px 16px;
+        padding: 12px 20px;
         border-radius: 8px;
         text-decoration: none;
-        font-weight: 700;
-        font-size: 13.5px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
+        font-weight: 800;
+        font-size: 14px;
+        display: block;
+        text-align: center;
     }
 
     /* WhatsApp Simulator */
@@ -187,7 +174,6 @@ DEFAULT_DUBAI_SME_LEADS = [
 if 'sme_leads_db' not in st.session_state:
     st.session_state.sme_leads_db = DEFAULT_DUBAI_SME_LEADS
 
-# Check Query Params
 query_params = st.query_params
 client_id = query_params.get("client", None)
 view_mode = query_params.get("view", "client" if client_id else "admin")
@@ -373,7 +359,7 @@ ApexLead Team Dubai"""
 
             encoded_subj = urllib.parse.quote(email_subj)
             encoded_body = urllib.parse.quote(email_body)
-            gmail_web_link = f"https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to={lead['Email']}&su={encoded_subj}&body={encoded_body}"
+            gmail_web_link = f"https://mail.google.com/mail/?view=cm&fs=1&to={lead['Email']}&su={encoded_subj}&body={encoded_body}"
             wa_text = f"Hi {lead['Company']} team, I prepared a custom WhatsApp AI demo for your {lead['Location']} listings: {custom_demo_link}\n\nOur launch offer is AED 250 for 2 months."
             wa_link = f"https://wa.me/{lead['Phone'].replace('+', '').replace(' ', '')}?text={urllib.parse.quote(wa_text)}"
 
@@ -398,13 +384,13 @@ ApexLead Team Dubai"""
             </div>
             """, unsafe_allow_html=True)
 
-            st.text_area(f"Proposal text for {lead['Company']}:", email_body, height=140, key=f"txt_{idx}")
+            st.text_area(f"Proposal text for {lead['Company']}:", email_body, height=130, key=f"txt_{idx}")
 
             c1, c2 = st.columns(2)
             with c1:
-                st.markdown(f'<a href="{gmail_web_link}" target="_blank" class="btn-gmail-action" style="width:100%;">🔴 Open in Web Gmail (Browser)</a>', unsafe_allow_html=True)
+                st.markdown(f'<a href="{gmail_web_link}" target="_blank" class="btn-gmail-red">🔴 Open Direct in Web Gmail</a>', unsafe_allow_html=True)
             with c2:
-                st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-wa-action" style="width:100%;">💬 Send WhatsApp Pitch</a>', unsafe_allow_html=True)
+                st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-wa-green">💬 Send WhatsApp Pitch</a>', unsafe_allow_html=True)
             st.markdown("<br>", unsafe_allow_html=True)
 
     elif admin_menu == "📊 Launch Pricing & Scaling Model":
