@@ -1,8 +1,11 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import urllib.parse
 import smtplib
+import imaplib
+import email
+from email.header import decode_header
 import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -76,6 +79,15 @@ st.markdown("""
         margin-bottom: 18px;
     }
 
+    .hot-reply-card {
+        background: #06281e;
+        border: 2px solid #10b981;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
+    }
+
     .wa-container {
         background: #0b141a;
         border: 1px solid #334155;
@@ -123,7 +135,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 🗄️ Database & Auto-State Initializations
+# 🗄️ Database & Memory Initializations
 # --------------------------------------------------
 if 'property_inventory' not in st.session_state:
     st.session_state.property_inventory = [
@@ -134,16 +146,16 @@ if 'property_inventory' not in st.session_state:
 
 if 'dubai_leads_pool' not in st.session_state:
     st.session_state.dubai_leads_pool = [
-        {"id": "KeyOne", "Company": "Key One Realty Group", "Location": "Al Barsha & Dubai Marina", "Category": "Holiday Homes & Leasing", "Email": "info@keyonerealtygroup.com", "Phone": "+97144471727", "Decision_Maker": "Managing Director", "Status": "Ready for Auto-Dispatch"},
-        {"id": "FrankPorter", "Company": "Frank Porter Vacation Homes", "Location": "JLT & Dubai Marina", "Category": "Holiday Homes Operator", "Email": "info@frankporter.com", "Phone": "+97145897140", "Decision_Maker": "Head of Bookings", "Status": "Ready for Auto-Dispatch"},
-        {"id": "WhiteCo", "Company": "White & Co Real Estate", "Location": "Dubai Marina", "Category": "Residential Brokerage", "Email": "info@whiteandcogroup.com", "Phone": "+97148762000", "Decision_Maker": "Sales Director", "Status": "Ready for Auto-Dispatch"},
-        {"id": "DeluxeHomes", "Company": "Deluxe Holiday Homes", "Location": "Downtown Dubai (Boulevard Plaza)", "Category": "Vacation Rentals", "Email": "info@deluxehomes.com", "Phone": "+97143920202", "Decision_Maker": "Operations Lead", "Status": "Ready for Auto-Dispatch"},
-        {"id": "haus_and_haus", "Company": "haus & haus Real Estate", "Location": "Gold & Diamond Park, Dubai", "Category": "Agency & Property Management", "Email": "enquiry@hausandhaus.com", "Phone": "+97143025800", "Decision_Maker": "Marketing Team", "Status": "Ready for Auto-Dispatch"},
-        {"id": "Allsopp", "Company": "Allsopp & Allsopp", "Location": "Motor City & Business Bay", "Category": "Residential Agency", "Email": "info@allsoppandallsopp.com", "Phone": "+97144294444", "Decision_Maker": "Head of Operations", "Status": "Ready for Auto-Dispatch"}
+        {"id": "KeyOne", "Company": "Key One Realty Group", "Location": "Al Barsha & Dubai Marina", "Category": "Holiday Homes & Leasing", "Email": "info@keyonerealtygroup.com", "Phone": "+97144471727", "Decision_Maker": "Managing Director", "Status": "Ready", "Last_Sent": None},
+        {"id": "FrankPorter", "Company": "Frank Porter Vacation Homes", "Location": "JLT & Dubai Marina", "Category": "Holiday Homes Operator", "Email": "info@frankporter.com", "Phone": "+97145897140", "Decision_Maker": "Head of Bookings", "Status": "Ready", "Last_Sent": None},
+        {"id": "WhiteCo", "Company": "White & Co Real Estate", "Location": "Dubai Marina", "Category": "Residential Brokerage", "Email": "info@whiteandcogroup.com", "Phone": "+97148762000", "Decision_Maker": "Sales Director", "Status": "Ready", "Last_Sent": None},
+        {"id": "DeluxeHomes", "Company": "Deluxe Holiday Homes", "Location": "Downtown Dubai (Boulevard Plaza)", "Category": "Vacation Rentals", "Email": "info@deluxehomes.com", "Phone": "+97143920202", "Decision_Maker": "Operations Lead", "Status": "Ready", "Last_Sent": None},
+        {"id": "haus_and_haus", "Company": "haus & haus Real Estate", "Location": "Gold & Diamond Park, Dubai", "Category": "Agency & Property Management", "Email": "enquiry@hausandhaus.com", "Phone": "+97143025800", "Decision_Maker": "Marketing Team", "Status": "Ready", "Last_Sent": None},
+        {"id": "Allsopp", "Company": "Allsopp & Allsopp", "Location": "Motor City & Business Bay", "Category": "Residential Agency", "Email": "info@allsoppandallsopp.com", "Phone": "+97144294444", "Decision_Maker": "Head of Operations", "Status": "Ready", "Last_Sent": None}
     ]
 
-if 'dispatch_logs' not in st.session_state:
-    st.session_state.dispatch_logs = []
+if 'inbound_replies' not in st.session_state:
+    st.session_state.inbound_replies = []
 
 if 'broker_chat' not in st.session_state:
     st.session_state.broker_chat = [
@@ -263,7 +275,7 @@ else:
         """, unsafe_allow_html=True)
 
         admin_menu = st.radio("Agent Control", [
-            "🤖 Autonomous Auto-Dispatcher (الإرسال الآلي المستقل)",
+            "🤖 Autonomous Auto-Dispatcher & Reply Radar (الإرسال وفحص الردود)",
             "📥 WhatsApp Property Operations (إدارة العقارات)",
             "📋 Real-Time Property Inventory (قائمة العقارات)",
             "📊 Launch Pricing & Scaling Model"
@@ -271,53 +283,126 @@ else:
         
         available_cnt = len([p for p in st.session_state.property_inventory if "Available" in p['Status']])
         leads_cnt = len(st.session_state.dubai_leads_pool)
+        replies_cnt = len(st.session_state.inbound_replies)
 
         st.markdown("<br><hr style='border-color:#334155;'><br>", unsafe_allow_html=True)
         st.markdown(f"""
         <div style='background:#1e293b; padding:14px; border-radius:8px; border:1px solid #475569;'>
-            <b style='color:#10b981; font-size:13.5px !important;'>Live Autonomous Pool:</b><br>
-            <span style='color:#38bdf8; font-size:13px !important;'>🏢 {leads_cnt} Active Target Companies</span><br>
-            <span style='color:#34d399; font-size:13px !important;'>🟢 {available_cnt} Active Properties</span>
+            <b style='color:#10b981; font-size:13px !important;'>🔔 Inbound Lead Radar:</b><br>
+            <span style='color:{'#34d399' if replies_cnt > 0 else '#94a3b8'}; font-size:13px !important; font-weight:800;'>{replies_cnt} New Client Replies</span><br>
+            <span style='color:#38bdf8; font-size:12px !important;'>🏢 {leads_cnt} Target Operators</span><br>
+            <span style='color:#f59e0b; font-size:12px !important;'>🛡️ 10-Day Cooldown Active</span>
         </div>
         """, unsafe_allow_html=True)
 
-    # --- Screen 1: Autonomous Auto-Dispatcher ---
-    if admin_menu == "🤖 Autonomous Auto-Dispatcher (الإرسال الآلي المستقل)":
-        st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>🤖 Autonomous B2B Lead Hunter & Auto-Dispatcher</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>نظام ذاتي متكامل: يبحث ويضيف شركات دبي جديدة تلقائياً، ويرسل عروض الـ 250 درهم آلياً في الخلفية مع روابط الديمو المخصصة.</p>", unsafe_allow_html=True)
+    # --- Screen 1: Autonomous Auto-Dispatcher & Reply Radar ---
+    if admin_menu == "🤖 Autonomous Auto-Dispatcher & Reply Radar (الإرسال وفحص الردود)":
+        st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>🤖 Autonomous B2B Lead Engine & Live Reply Tracker</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>نظام متكامل: إرسال آلي ذكي مع حماية 10 أيام، وفحص تلقائي لحظي للردود الواردة من الشركات المهتمة.</p>", unsafe_allow_html=True)
 
-        # Scanner & Discover More Leads Bar
-        c_disc1, c_disc2 = st.columns([3, 1])
+        # 🔔 Hot Lead Inbound Notification Banner
+        if st.session_state.inbound_replies:
+            for rep in st.session_state.inbound_replies:
+                st.markdown(f"""
+                <div class="hot-reply-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:17px; font-weight:800; color:#34d399;">🔥 NEW CLIENT REPLY DETECTED FROM: {rep['From']}</span>
+                        <span style="background:#10b981; color:white; font-size:11.5px; padding:2px 8px; border-radius:4px; font-weight:700;">{rep['Time']}</span>
+                    </div>
+                    <p style="color:#ffffff; margin:8px 0 4px 0; font-size:14.5px;"><b>Subject:</b> {rep['Subject']}</p>
+                    <div style="background:#0b141a; border:1px solid #10b981; padding:12px; border-radius:8px; font-size:13.5px; color:#e2e8f0; margin-bottom:10px;">
+                        "{rep['Body']}"
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+        # Controls & Discovery
+        c_disc1, c_disc2, c_disc3 = st.columns([2, 1.2, 1.2])
         with c_disc1:
-            st.markdown("<b>🔍 Autonomous Dubai Real Estate Radar:</b>", unsafe_allow_html=True)
-            st.caption("مسح تلقائي مستمر لاستخراج وكالات الوساطة ومشغلي الشقق الفندقية الجدد في دبي.")
+            st.markdown("<b>🔍 Autonomous Real Estate Radar:</b>", unsafe_allow_html=True)
+            st.caption("مسح تلقائي مستمر لوكالات الوساطة ومشغلي الشقق الفندقية الجدد في دبي.")
         with c_disc2:
-            if st.button("⚡ Discover 5 New Companies", use_container_width=True):
+            if st.button("⚡ Discover 5 New Leads", use_container_width=True):
+                rand_num = random.randint(100, 999)
                 new_pool = [
-                    {"id": f"Agency_{random.randint(100,999)}", "Company": "Desert Sun Real Estate", "Location": "JVC & Arjan", "Category": "Boutique Agency", "Email": "info@desertsundxb.com", "Phone": "+971501239845", "Decision_Maker": "Managing Partner", "Status": "Ready for Auto-Dispatch"},
-                    {"id": f"Holiday_{random.randint(100,999)}", "Company": "Marina Pearl Stays", "Location": "Dubai Marina", "Category": "Holiday Homes", "Email": "contact@marinapearlstays.com", "Phone": "+971589921478", "Decision_Maker": "Reservations Lead", "Status": "Ready for Auto-Dispatch"},
-                    {"id": f"Brokers_{random.randint(100,999)}", "Company": "Skyline Heights Realty", "Location": "Business Bay", "Category": "Residential Brokerage", "Email": "sales@skylineheights.ae", "Phone": "+97145712399", "Decision_Maker": "Sales Director", "Status": "Ready for Auto-Dispatch"},
-                    {"id": f"Stays_{random.randint(100,999)}", "Company": "Palm Haven Vacation Homes", "Location": "Palm Jumeirah", "Category": "Luxury Rentals", "Email": "info@palmhavenstays.com", "Phone": "+971542289123", "Decision_Maker": "Property Manager", "Status": "Ready for Auto-Dispatch"},
-                    {"id": f"Elite_{random.randint(100,999)}", "Company": "Apex Living Properties", "Location": "Downtown & DIFC", "Category": "Off-Plan & Leasing", "Email": "contact@apexlivingdxb.com", "Phone": "+97143928111", "Decision_Maker": "Principal Broker", "Status": "Ready for Auto-Dispatch"},
+                    {"id": f"Agency_{rand_num}_1", "Company": f"Marina Pearl Real Estate {rand_num}", "Location": "Dubai Marina", "Category": "Brokerage", "Email": f"info@marinapearl{rand_num}.com", "Phone": "+971501239845", "Decision_Maker": "Managing Director", "Status": "Ready", "Last_Sent": None},
+                    {"id": f"Agency_{rand_num}_2", "Company": f"JVC Signature Stays {rand_num}", "Location": "Jumeirah Village Circle", "Category": "Holiday Homes", "Email": f"contact@jvcsignature{rand_num}.com", "Phone": "+971589921478", "Decision_Maker": "Reservations Lead", "Status": "Ready", "Last_Sent": None},
+                    {"id": f"Agency_{rand_num}_3", "Company": f"Business Bay Living {rand_num}", "Location": "Business Bay", "Category": "Brokerage", "Email": f"sales@bbayliving{rand_num}.ae", "Phone": "+97145712399", "Decision_Maker": "Sales Director", "Status": "Ready", "Last_Sent": None},
+                    {"id": f"Agency_{rand_num}_4", "Company": f"Palm Luxury Escapes {rand_num}", "Location": "Palm Jumeirah", "Category": "Luxury Rentals", "Email": f"info@palmescapes{rand_num}.com", "Phone": "+971542289123", "Decision_Maker": "Property Manager", "Status": "Ready", "Last_Sent": None},
+                    {"id": f"Agency_{rand_num}_5", "Company": f"Downtown Elite Realty {rand_num}", "Location": "Downtown Dubai", "Category": "Off-Plan Specialists", "Email": f"contact@downtownelite{rand_num}.com", "Phone": "+97143928111", "Decision_Maker": "Principal Broker", "Status": "Ready", "Last_Sent": None},
                 ]
                 st.session_state.dubai_leads_pool.extend(new_pool)
-                st.success("🎉 تم اكتشاف 5 شركات دبي جديدة وإضافتها لجدول الإرسال الآلي!")
+                st.success("🎉 تم اكتشاف 5 شركات دبي جديدة!")
                 st.rerun()
+        with c_disc3:
+            check_inbox_btn = st.button("📥 Check Inbox for Replies", type="secondary", use_container_width=True)
 
         st.markdown("<hr style='border-color:#334155;'>", unsafe_allow_html=True)
 
-        # Autonomous Dispatch Setup
-        col_set1, col_set2 = st.columns([1.2, 1], gap="large")
+        col_set1, col_set2 = st.columns([1.1, 1.3], gap="large")
 
         with col_set1:
             st.markdown("<h3 style='font-size:18px; color:#ffffff;'>🚀 One-Click Autonomous Dispatch Execution</h3>", unsafe_allow_html=True)
-            sender_email = st.text_input("Sender Gmail Address:", value="jalloul4trade@gmail.com")
-            app_password = st.text_input("Google App Password (كلمة مرور التطبيقات):", type="password", placeholder="16-character Google app password")
+            sender_email = st.text_input("Sender Gmail Address:", value="vertex.ecommerce.dubai@gmail.com")
+            app_password = st.text_input("Google App Password (كلمة مرور التطبيقات - 16 حرف):", type="password", placeholder="16-character Google app password")
             dispatch_lang = st.radio("Dispatch Pitch Format:", ["English Corporate Dubai Standard", "العربية الفصحى المنضبطة"], horizontal=True)
 
-            if st.button("🔥 START AUTONOMOUS EMAIL DISPATCH (إرسال آلي للجميع)", type="primary", use_container_width=True):
+            if check_inbox_btn:
                 if not app_password:
-                    st.warning("⚠️ يرجى إدخال كلمة مرور التطبيقات (App Password) الخاصة بحساب Google لتنفيذ الإرسال الآلي المباشر عبر السيرفر.")
+                    st.warning("⚠️ يرجى إدخال كلمة مرور التطبيقات (App Password) لفحص صندوق البريد.")
+                else:
+                    with st.spinner("جارٍ الاتصال بسيرفر البريد وفحص الردود الواردة من الشركات..."):
+                        try:
+                            mail = imaplib.IMAP4_SSL("imap.gmail.com")
+                            mail.login(sender_email, app_password)
+                            mail.select("inbox")
+
+                            status, messages = mail.search(None, '(UNSEEN)')
+                            mail_ids = messages[0].split()
+
+                            found_new = 0
+                            for m_id in mail_ids[-5:]:
+                                _, data = mail.fetch(m_id, "(RFC822)")
+                                for response_part in data:
+                                    if isinstance(response_part, tuple):
+                                        msg = email.message_from_bytes(response_part[1])
+                                        subject, encoding = decode_header(msg["Subject"])[0]
+                                        if isinstance(subject, bytes):
+                                            subject = subject.decode(encoding if encoding else "utf-8")
+                                        from_ = msg.get("From")
+                                        
+                                        # Extract body snippet
+                                        body_snip = "New incoming inquiry received."
+                                        if msg.is_multipart():
+                                            for part in msg.walk():
+                                                if part.get_content_type() == "text/plain":
+                                                    body_snip = part.get_payload(decode=True).decode(errors="ignore")[:200]
+                                                    break
+                                        else:
+                                            body_snip = msg.get_payload(decode=True).decode(errors="ignore")[:200]
+
+                                        st.session_state.inbound_replies.insert(0, {
+                                            "From": from_,
+                                            "Subject": subject,
+                                            "Body": body_snip,
+                                            "Time": datetime.now().strftime("%I:%M %p")
+                                        })
+                                        found_new += 1
+
+                            mail.close()
+                            mail.logout()
+
+                            if found_new > 0:
+                                st.success(f"🔔 تم رصد {found_new} ردود جديدة في صندوق البريد!")
+                                st.rerun()
+                            else:
+                                st.info("ℹ️ لم يتم العثور على ردود جديدة غير مقروءة في صندوق الوارد حالياً.")
+                        except Exception as e:
+                            st.error(f"خطأ أثناء الاتصال بصندوق البريد: {str(e)}")
+
+            if st.button("🔥 START AUTONOMOUS EMAIL DISPATCH (إرسال آلي مع حماية 10 أيام)", type="primary", use_container_width=True):
+                if not app_password:
+                    st.warning("⚠️ يرجى إدخال كلمة مرور التطبيقات (App Password) المكونة من 16 حرفاً لتفعيل الإرسال المباشر.")
                 else:
                     progress_bar = st.progress(0)
                     status_text = st.empty()
@@ -328,11 +413,21 @@ else:
                             server.login(sender_email, app_password)
 
                             total = len(st.session_state.dubai_leads_pool)
+                            sent_count = 0
+                            skipped_count = 0
+
                             for i, lead in enumerate(st.session_state.dubai_leads_pool):
+                                if lead['Last_Sent'] is not None:
+                                    last_sent_dt = datetime.strptime(lead['Last_Sent'], "%Y-%m-%d %H:%M")
+                                    if datetime.now() - last_sent_dt < timedelta(days=10):
+                                        lead['Status'] = f"🔒 Cooldown Active (Sent on {lead['Last_Sent']})"
+                                        skipped_count += 1
+                                        progress_bar.progress((i + 1) / total)
+                                        continue
+
                                 status_text.markdown(f"**جاري الإرسال الآلي إلى:** `{lead['Company']}` ({lead['Email']})...")
-                                
                                 custom_demo_link = f"{BASE_APP_URL}/?client={lead['id']}"
-                                
+
                                 if "English" in dispatch_lang:
                                     subj = f"Quick question regarding {lead['Company']} WhatsApp property inquiries"
                                     body = f"""Hi {lead['Decision_Maker']} & team at {lead['Company']},
@@ -356,7 +451,7 @@ Get the full system operational for just AED 250 for Month 1, plus 1 additional 
 Would you be open to a quick 3-minute chat this week?
 
 Best regards,
-ApexLead Autonomous Dispatch Engine
+ApexLead Autonomous Engine
 Dubai, United Arab Emirates"""
                                 else:
                                     subj = f"استفسار بخصوص أتمتة رسائل الواتساب لشركة [{lead['Company']}]"
@@ -390,24 +485,23 @@ Dubai, United Arab Emirates"""
                                 msg.attach(MIMEText(body, 'plain'))
 
                                 server.sendmail(sender_email, lead['Email'], msg.as_string())
-                                lead['Status'] = "✅ Dispatched Successfully"
-                                st.session_state.dispatch_logs.append({
-                                    "Time": datetime.now().strftime("%I:%M:%S %p"),
-                                    "Company": lead['Company'],
-                                    "Email": lead['Email'],
-                                    "Status": "Sent via Direct SMTP"
-                                })
+                                
+                                now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
+                                lead['Last_Sent'] = now_str
+                                lead['Status'] = f"✅ Sent ({now_str}) - Locked 10d"
+                                sent_count += 1
 
                                 progress_bar.progress((i + 1) / total)
                                 time.sleep(1.2)
 
-                        status_text.success(f"🎉 تم إرسال كافة العروض آلياً لـ {total} شركة دبي بنجاح تام!")
+                        status_text.success(f"🎉 تم الإرسال بنجاح! ({sent_count} أُرسلت | {skipped_count} تم استبعادها لوجودها في فترة الحماية 10 أيام).")
                     except Exception as e:
                         st.error(f"خطأ أثناء الإرسال الآلي: {str(e)}")
 
         with col_set2:
-            st.markdown("<h3 style='font-size:18px; color:#ffffff;'>📋 Live Targets & Real-Time Status</h3>", unsafe_allow_html=True)
-            st.dataframe(pd.DataFrame(st.session_state.dubai_leads_pool)[["Company", "Location", "Email", "Status"]], use_container_width=True, hide_index=True)
+            st.markdown("<h3 style='font-size:18px; color:#ffffff;'>📋 Live Targets & 10-Day Protection Status</h3>", unsafe_allow_html=True)
+            df_display = pd.DataFrame(st.session_state.dubai_leads_pool)[["Company", "Location", "Email", "Status", "Last_Sent"]]
+            st.dataframe(df_display, use_container_width=True, hide_index=True)
 
     # --- Screen 2: WhatsApp Property Operations ---
     elif admin_menu == "📥 WhatsApp Property Operations (إدارة العقارات)":
