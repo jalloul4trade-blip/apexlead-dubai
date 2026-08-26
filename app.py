@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import urllib.parse
-import random
 import time
 
 st.set_page_config(
@@ -91,27 +90,33 @@ st.markdown("""
         display: inline-block;
     }
 
-    .btn-email-action {
-        background: #0284c7;
+    .btn-gmail-action {
+        background: #ea4335;
         color: white !important;
-        padding: 10px 20px;
+        padding: 10px 16px;
         border-radius: 8px;
         text-decoration: none;
         font-weight: 700;
         font-size: 13.5px;
-        display: inline-block;
-        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid rgba(255,255,255,0.15);
     }
+
     .btn-wa-action {
         background: #10b981;
         color: white !important;
-        padding: 10px 20px;
+        padding: 10px 16px;
         border-radius: 8px;
         text-decoration: none;
         font-weight: 700;
         font-size: 13.5px;
-        display: inline-block;
-        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
     }
 
     /* WhatsApp Simulator */
@@ -164,18 +169,18 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 🗄️ Large Dataset: Real Dubai SME Operators
+# 🗄️ SME Lead Database
 # --------------------------------------------------
 DEFAULT_DUBAI_SME_LEADS = [
     {"id": "KeyOne", "Company": "Key One Holiday Homes", "Category": "Boutique Vacation Rentals", "Location": "Al Barsha & JVC", "Team_Size": "8 Staff Members", "Decision_Maker": "Property Manager", "Email": "info@keyoneholidayhomes.com", "Phone": "+97144471727", "Target_Pain": "Delayed responses to weekend WhatsApp booking inquiries."},
     {"id": "WhiteCo", "Company": "White & Co Real Estate", "Category": "Independent Brokerage", "Location": "Dubai Marina", "Team_Size": "14 Brokers", "Decision_Maker": "Managing Director", "Email": "contact@whiteandcogroup.com", "Phone": "+97148762000", "Target_Pain": "Brokers spending hours on unqualified leads with low budgets."},
     {"id": "FrankPorter", "Company": "Frank Porter Stays", "Category": "Holiday Homes Operator", "Location": "JLT & Dubai Marina", "Team_Size": "12 Staff Members", "Decision_Maker": "Reservations Lead", "Email": "bookings@frankporter.com", "Phone": "+97145897140", "Target_Pain": "Slow night-time response to international tourists across timezones."},
     {"id": "AlMira", "Company": "Al Mira Real Estate", "Category": "Local Community Agency", "Location": "Business Bay", "Team_Size": "6 Brokers", "Decision_Maker": "Agency Owner", "Email": "info@almira.ae", "Phone": "+97143928888", "Target_Pain": "Owner manually replies to all Meta ad messages after office hours."},
+    {"id": "EverNest", "Company": "EverNest Real Estate", "Category": "Residential Brokerage", "Location": "Business Bay", "Team_Size": "10 Brokers", "Decision_Maker": "Principal Broker", "Email": "account@evernestre.ae", "Phone": "+97145891235", "Target_Pain": "Need automated buyer pre-qualification before scheduling viewings."},
     {"id": "Stayis", "Company": "Stayis Holiday Homes", "Category": "Short-Stay Vacation Rentals", "Location": "Downtown Dubai", "Team_Size": "5 Staff Members", "Decision_Maker": "Operations Lead", "Email": "info@stayis.com", "Phone": "+971503612345", "Target_Pain": "Guest check-in inquiries during late night hours go unanswered."},
     {"id": "Airstay", "Company": "Airstay Holiday Homes", "Category": "Boutique Property Management", "Location": "Jumeirah Village Circle (JVC)", "Team_Size": "7 Staff Members", "Decision_Maker": "Managing Partner", "Email": "contact@airstay.ae", "Phone": "+971582698712", "Target_Pain": "High drop-off rate on Meta ad leads due to response delays."},
     {"id": "DesertCity", "Company": "Desert City Stays", "Category": "Holiday Homes & Short Stay", "Location": "Al Barsha Heights", "Team_Size": "9 Staff Members", "Decision_Maker": "Head of Bookings", "Email": "contact@desertcitystays.com", "Phone": "+97145719822", "Target_Pain": "Manual quotation calculation takes over 45 minutes per guest."},
     {"id": "SavisHomes", "Company": "Savis Vacation Homes", "Category": "Luxury Holiday Apartments", "Location": "Palm Jumeirah & Marina", "Team_Size": "11 Staff Members", "Decision_Maker": "Sales & Booking Director", "Email": "info@savishomes.com", "Phone": "+971543219985", "Target_Pain": "Losing European tourist bookings to competing instant-reply portals."},
-    {"id": "EverNest", "Company": "EverNest Real Estate", "Category": "Residential Brokerage", "Location": "Business Bay", "Team_Size": "10 Brokers", "Decision_Maker": "Principal Broker", "Email": "account@evernestre.ae", "Phone": "+97145891235", "Target_Pain": "Need automated buyer pre-qualification before scheduling viewings."},
     {"id": "LaBuenaVida", "Company": "La Buena Vida Stays", "Category": "Boutique Vacation Homes", "Location": "Dubai Marina", "Team_Size": "6 Staff Members", "Decision_Maker": "Guest Experience Manager", "Email": "contact@labuenavida.ae", "Phone": "+971507611292", "Target_Pain": "WhatsApp inquiries during Friday prayer hours remain unattended."}
 ]
 
@@ -302,26 +307,6 @@ else:
         st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>🎯 Dubai Autonomous SME Lead Radar</h1>", unsafe_allow_html=True)
         st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>Autonomous multi-channel scanner querying Bayut, Property Finder, DTCM Holiday Home directories, and Meta Ad Library.</p>", unsafe_allow_html=True)
 
-        # Autonomous Scanner Trigger
-        c_sc1, c_sc2 = st.columns([3, 1])
-        with c_sc1:
-            scan_source = st.selectbox("Select Target Data Channel for Autonomous Scanning:", [
-                "All Channels (Bayut + Property Finder + DTCM Licensed Registry + Meta Ads)",
-                "DTCM Dubai Holiday Homes Registry (300+ Operators)",
-                "Bayut & Property Finder SME Brokerages (JVC / Marina / Business Bay)",
-                "Active Meta & TikTok Advertisers (Agencies spending AED 5k-20k/mo)"
-            ])
-        with c_sc2:
-            st.write("")
-            st.write("")
-            if st.button("🚀 Run Live Market Scan", type="primary", use_container_width=True):
-                with st.spinner("Querying Dubai business directories & extracting verified decision-makers..."):
-                    time.sleep(1.8)
-                    st.success("Scanned 40+ active operators! Extracted contact coordinates & generated dedicated demos.")
-
-        st.markdown("<br>", unsafe_allow_html=True)
-
-        # Lead Filter Options
         col_f1, col_f2 = st.columns([2, 2])
         with col_f1:
             area_filter = st.selectbox("Filter by District:", ["All Districts", "Al Barsha & JVC", "Dubai Marina", "Business Bay", "Downtown Dubai", "JLT"])
@@ -330,7 +315,6 @@ else:
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # Display Leads
         displayed_leads = st.session_state.sme_leads_db
         if area_filter != "All Districts":
             displayed_leads = [l for l in displayed_leads if area_filter.lower() in l['Location'].lower()]
@@ -387,7 +371,9 @@ ApexLead Team Dubai"""
 وتفضلوا بقبول فائق الاحترام والتقدير،
 فريق التطوير والأتمتة"""
 
-            mailto_link = f"mailto:{lead['Email']}?subject={urllib.parse.quote(email_subj)}&body={urllib.parse.quote(email_body)}"
+            encoded_subj = urllib.parse.quote(email_subj)
+            encoded_body = urllib.parse.quote(email_body)
+            gmail_web_link = f"https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to={lead['Email']}&su={encoded_subj}&body={encoded_body}"
             wa_text = f"Hi {lead['Company']} team, I prepared a custom WhatsApp AI demo for your {lead['Location']} listings: {custom_demo_link}\n\nOur launch offer is AED 250 for 2 months."
             wa_link = f"https://wa.me/{lead['Phone'].replace('+', '').replace(' ', '')}?text={urllib.parse.quote(wa_text)}"
 
@@ -412,9 +398,11 @@ ApexLead Team Dubai"""
             </div>
             """, unsafe_allow_html=True)
 
+            st.text_area(f"Proposal text for {lead['Company']}:", email_body, height=140, key=f"txt_{idx}")
+
             c1, c2 = st.columns(2)
             with c1:
-                st.markdown(f'<a href="{mailto_link}" class="btn-email-action" style="width:100%;">📧 Send Proposal via Email</a>', unsafe_allow_html=True)
+                st.markdown(f'<a href="{gmail_web_link}" target="_blank" class="btn-gmail-action" style="width:100%;">🔴 Open in Web Gmail (Browser)</a>', unsafe_allow_html=True)
             with c2:
                 st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-wa-action" style="width:100%;">💬 Send WhatsApp Pitch</a>', unsafe_allow_html=True)
             st.markdown("<br>", unsafe_allow_html=True)
