@@ -5,7 +5,7 @@ import urllib.parse
 import time
 
 st.set_page_config(
-    page_title="ApexLead AI | Dubai SME WhatsApp Sales Engine",
+    page_title="ApexLead AI | Autonomous Real Estate OS",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -71,24 +71,14 @@ st.markdown("""
         margin-bottom: 18px;
     }
 
-    .offer-badge {
-        background: #d97706;
-        color: #ffffff !important;
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-weight: 800 !important;
-        font-size: 12px !important;
-        display: inline-block;
-    }
-
     .btn-gmail-red {
         background: #ea4335 !important;
         color: white !important;
-        padding: 12px 20px;
+        padding: 10px 18px;
         border-radius: 8px;
         text-decoration: none;
         font-weight: 800;
-        font-size: 14px;
+        font-size: 13.5px;
         display: block;
         text-align: center;
         border: 1px solid rgba(255,255,255,0.2);
@@ -97,23 +87,21 @@ st.markdown("""
     .btn-wa-green {
         background: #10b981 !important;
         color: white !important;
-        padding: 12px 20px;
+        padding: 10px 18px;
         border-radius: 8px;
         text-decoration: none;
         font-weight: 800;
-        font-size: 14px;
+        font-size: 13.5px;
         display: block;
         text-align: center;
     }
 
-    /* WhatsApp Simulator */
+    /* WhatsApp Simulators */
     .wa-container {
         background: #0b141a;
         border: 1px solid #334155;
         border-radius: 14px;
         overflow: hidden;
-        max-width: 650px;
-        margin: 0 auto 25px auto;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     .wa-topbar {
@@ -127,8 +115,8 @@ st.markdown("""
     .wa-feed {
         background-color: #0b141a;
         padding: 20px;
-        min-height: 420px;
-        max-height: 520px;
+        min-height: 400px;
+        max-height: 480px;
         overflow-y: auto;
     }
     .msg-user {
@@ -156,57 +144,27 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 🗄️ Verified Real Dubai Boutique & SME Operators
+# 🗄️ Database: Live Properties & SME Leads
 # --------------------------------------------------
+if 'property_inventory' not in st.session_state:
+    st.session_state.property_inventory = [
+        {"ID": "DXB-101", "Title": "Luxury 1BR Canal View", "Location": "Business Bay", "Type": "Apartment", "Price": "AED 85,000 / yr", "Status": "🟢 Available", "Added_By": "WhatsApp Auto-Ingest"},
+        {"ID": "DXB-102", "Title": "Furnished Holiday Studio", "Location": "Jumeirah Village Circle (JVC)", "Type": "Studio", "Price": "AED 5,400 / mo", "Status": "🟢 Available", "Added_By": "Direct System"},
+        {"ID": "DXB-103", "Title": "2BR Marina Panoramic", "Location": "Dubai Marina", "Type": "Apartment", "Price": "AED 135,000 / yr", "Status": "🟡 Pending Viewing", "Added_By": "WhatsApp Auto-Ingest"},
+    ]
+
 VERIFIED_DUBAI_SME_LEADS = [
-    {
-        "id": "KeyOne",
-        "Company": "Key One Realty Group",
-        "Category": "Holiday Homes & Boutique Leasing",
-        "Location": "Al Barsha / Dubai Marina",
-        "Team_Size": "10-15 Staff",
-        "Decision_Maker": "Managing Director / Reservations Team",
-        "Email": "info@keyonerealtygroup.com",
-        "Phone": "+97144471727",
-        "Target_Pain": "Late-night booking inquiries on WhatsApp causing guest drop-offs."
-    },
-    {
-        "id": "FrankPorter",
-        "Company": "Frank Porter Vacation Homes",
-        "Category": "Boutique Vacation Rentals",
-        "Location": "JLT / Dubai Marina",
-        "Team_Size": "12 Staff Members",
-        "Decision_Maker": "Head of Bookings & Guest Relations",
-        "Email": "info@frankporter.com",
-        "Phone": "+97145897140",
-        "Target_Pain": "International tourist time-zone delays for WhatsApp pricing requests."
-    },
-    {
-        "id": "WhiteCo",
-        "Company": "White & Co Real Estate",
-        "Category": "Independent Agency",
-        "Location": "Dubai Marina",
-        "Team_Size": "15 Brokers",
-        "Decision_Maker": "Managing Director",
-        "Email": "info@whiteandcogroup.com",
-        "Phone": "+97148762000",
-        "Target_Pain": "Brokers overwhelmed by unqualified inquiries from Instagram ads."
-    },
-    {
-        "id": "DeluxeHomes",
-        "Company": "Deluxe Holiday Homes",
-        "Category": "Short-Term Vacation Rentals",
-        "Location": "Downtown Dubai",
-        "Team_Size": "18 Staff",
-        "Decision_Maker": "Reservations Lead",
-        "Email": "info@deluxehomes.com",
-        "Phone": "+97143920202",
-        "Target_Pain": "Slow manual rate quotation causing direct booking losses."
-    }
+    {"id": "KeyOne", "Company": "Key One Realty Group", "Category": "Holiday Homes & Boutique Leasing", "Location": "Al Barsha / Dubai Marina", "Team_Size": "10-15 Staff", "Decision_Maker": "Managing Director / Reservations Team", "Email": "info@keyonerealtygroup.com", "Phone": "+97144471727", "Target_Pain": "Late-night booking inquiries on WhatsApp causing guest drop-offs."},
+    {"id": "FrankPorter", "Company": "Frank Porter Vacation Homes", "Category": "Boutique Vacation Rentals", "Location": "JLT / Dubai Marina", "Team_Size": "12 Staff Members", "Decision_Maker": "Head of Bookings & Guest Relations", "Email": "info@frankporter.com", "Phone": "+97145897140", "Target_Pain": "International tourist time-zone delays for WhatsApp pricing requests."},
+    {"id": "WhiteCo", "Company": "White & Co Real Estate", "Category": "Independent Agency", "Location": "Dubai Marina", "Team_Size": "15 Brokers", "Decision_Maker": "Managing Director", "Email": "info@whiteandcogroup.com", "Phone": "+97148762000", "Target_Pain": "Brokers overwhelmed by unqualified inquiries from Instagram ads."},
+    {"id": "DeluxeHomes", "Company": "Deluxe Holiday Homes", "Category": "Short-Term Vacation Rentals", "Location": "Downtown Dubai", "Team_Size": "18 Staff", "Decision_Maker": "Reservations Lead", "Email": "info@deluxehomes.com", "Phone": "+97143920202", "Target_Pain": "Slow manual rate quotation causing direct booking losses."}
 ]
 
-if 'sme_leads_db' not in st.session_state:
-    st.session_state.sme_leads_db = VERIFIED_DUBAI_SME_LEADS
+if 'broker_chat' not in st.session_state:
+    st.session_state.broker_chat = [
+        {"sender": "user", "text": "وصلتنا شقة جديدة للبيع في داون تاون برج فيستا، غرفتين وصالة، إطلالة على البوليفارد، السعر 2.8 مليون درهم."},
+        {"sender": "bot", "text": "تم استلام العقار الجديد بنجاح 🌟 لتحليله وتحديث قاعدة بيانات المبيعات، يرجى تزويدي بالآتي:\n1. كم المساحة الإجمالية بالقدم المربع؟\n2. هل الشقة مفروشة أم غير مفروشة؟\n3. يرجى إرسال الصور والمخطط لحفظها."},
+    ]
 
 query_params = st.query_params
 client_id = query_params.get("client", None)
@@ -218,7 +176,7 @@ view_mode = query_params.get("view", "client" if client_id else "admin")
 if view_mode == "client" or client_id:
     matched_company = "Your Real Estate Agency"
     matched_loc = "Dubai"
-    for lead in st.session_state.sme_leads_db:
+    for lead in VERIFIED_DUBAI_SME_LEADS:
         if lead["id"].lower() == str(client_id).lower():
             matched_company = lead["Company"]
             matched_loc = lead["Location"]
@@ -238,12 +196,12 @@ if view_mode == "client" or client_id:
 
     if 'client_chat' not in st.session_state:
         st.session_state.client_chat = [
-            {"sender": "user", "text": "مرحبا، شفت إعلانكم بخصوص الشقق المفروشة في دبي، في مجال استفسر؟"},
-            {"sender": "bot", "text": f"أهلاً وسهلاً بك في {matched_company} 🌟 يسعدنا خدمتك على مدار ٢٤ ساعة. متاح لدينا خيارات مفروشة بالكامل ومجهزة في أرقى الأبراج. هل تبحث عن إيجار شهري أم سنوي؟ وما هي المنطقة المفضلة لديك؟"},
+            {"sender": "user", "text": "مرحبا، شفت إعلانكم بخصوص الشقق في دبي، شو في خيارات متوفرة عندكم؟"},
+            {"sender": "bot", "text": f"أهلاً وسهلاً بك في {matched_company} 🌟 متاح لدينا حالياً خيارات مميزة ومجهزة:\n• استوديو مفروش في JVC (٥,٤٠٠ درهم شهرياً شامل الفواتير)\n• شقة غرفة وصالة بإطلالة القناة المائية في الخليج التجاري (٨٥,٠٠٠ درهم سنوياً)\n• شقة غرفتين فاخرة في دبي مارينا (١٣٥,٠٠٠ درهم سنوياً).\nما هي المنطقة أو الميزانية الأنسب لطلبكم؟"},
         ]
 
     st.markdown(f"""
-    <div class="wa-container">
+    <div class="wa-container" style="max-width:650px; margin:0 auto;">
         <div class="wa-topbar">
             <div style="background:#10b981; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; color:white;">⚡</div>
             <div>
@@ -254,19 +212,19 @@ if view_mode == "client" or client_id:
     </div>
     """, unsafe_allow_html=True)
 
-    chat_html = "<div class='wa-container' style='margin-top:-25px; border-top:none; border-radius:0 0 14px 14px;'><div class='wa-feed'>"
+    chat_html = "<div class='wa-container' style='max-width:650px; margin: -1px auto 25px auto; border-top:none; border-radius:0 0 14px 14px;'><div class='wa-feed'>"
     for msg in st.session_state.client_chat:
         if msg['sender'] == 'user':
-            chat_html += f"<div class='msg-user'><b>You (Customer):</b><br>{msg['text']}</div>"
+            chat_html += f"<div class='msg-user'><b>You (Customer):</b><br>{msg['text'].replace(chr(10), '<br>')}</div>"
         else:
-            chat_html += f"<div class='msg-bot'><b>{matched_company} Assistant:</b><br>{msg['text']}</div>"
+            chat_html += f"<div class='msg-bot'><b>{matched_company} Assistant:</b><br>{msg['text'].replace(chr(10), '<br>')}</div>"
     chat_html += "</div></div>"
     st.markdown(chat_html, unsafe_allow_html=True)
 
     with st.form("client_sim_form", clear_on_submit=True):
         col_in1, col_in2 = st.columns([4, 1.2])
         with col_in1:
-            client_input = st.text_input("Test the AI response (Arabic, English, or Hindi)...", placeholder="e.g. كم إيجار الاستوديو؟ / What is the monthly rent? / بدي عاين الشقة", label_visibility="collapsed")
+            client_input = st.text_input("Test inquiry (Arabic, English, or Hindi)...", placeholder="e.g. كم سعر شقة الخليج التجاري؟ / What is available in Marina? / بدي عاين الشقة", label_visibility="collapsed")
         with col_in2:
             send_btn = st.form_submit_button("Send 💬", type="primary", use_container_width=True)
 
@@ -274,16 +232,12 @@ if view_mode == "client" or client_id:
             st.session_state.client_chat.append({"sender": "user", "text": client_input})
             lower_in = client_input.strip().lower()
 
-            if any(w in lower_in for w in ["namaste", "bhai", "kya", "crore", "lakh", "hai", "bhk", "paisa", "rent"]):
-                reply = f"Namaste ji! Welcome to {matched_company}. Humare paas 1BHK aur studio units available hain with all utility bills included. Kya aap viewing schedule karna chahte hain?"
-            elif any(w in lower_in for w in ["hello", "hi", "price", "bedroom", "studio", "available", "month", "rent", "viewing"]):
-                reply = f"Hello and welcome to {matched_company}! We have fully furnished units available right now with flexible monthly payments. Would you like to schedule a viewing visit today?"
-            elif any(w in lower_in for w in ["معاينة", "موعد", "حجز", "بدي شوف", "عاين"]):
-                reply = "يسعدنا ترتيب موعد لمعاينة الشقة اليوم الساعة الخامسة مساءً أو غداً صباحاً. أي الموعدين يناسب جدولكم الكريم؟"
-            elif any(w in lower_in for w in ["كم السعر", "كم الإيجار", "الأسعار", "بكم"]):
-                reply = "تبدأ الأسعار الشهرية من ٥,٤٠٠ درهم شاملة لكافة الفواتير والإنترنت والصيانة. هل تفضل الدفع شهرياً أم سنوياً؟"
+            if any(w in lower_in for w in ["معاينة", "موعد", "حجز", "بدي شوف", "عاين", "viewing"]):
+                reply = "يسعدنا ترتيب موعد لمعاينة الشقة اليوم الساعة الخامسة مساءً أو غداً الساعة الحادية عشرة صباحاً. أي الموعدين يناسب جدولكم الكريم؟"
+            elif any(w in lower_in for w in ["كم السعر", "كم الإيجار", "الأسعار", "بكم", "price", "rent"]):
+                reply = "تبدأ الإيجارات الشهرية من ٥,٤٠٠ درهم شاملة لكافة الفواتير، والسنوية تبدأ من ٨٥,٠٠٠ درهم بتسهيلات دفع مرنة. هل تفضل الإيجار الشهري أم السنوي؟"
             else:
-                reply = f"أهلاً وسهلاً بك في {matched_company}. تم استلام طلبكم الكريم بعناية، ومتاح لدينا خيارات مطابقة تماماً. هل ترغب في استلام صور الشقة والموقع عبر هذه المحادثة؟"
+                reply = f"تم استلام طلبكم بعناية في {matched_company}. خياراتنا مطابقة ومحدثة لحظياً في قاعدة البيانات. هل ترغب في إرسال الصور ومخطط الشقة عبر هذه المحادثة؟"
 
             st.session_state.client_chat.append({"sender": "bot", "text": reply})
             st.rerun()
@@ -313,24 +267,100 @@ else:
         </div>
         """, unsafe_allow_html=True)
 
-        admin_menu = st.radio("Admin Navigation", ["🎯 Verified Lead Outreach & Demos", "📊 Launch Pricing & Scaling Model"])
+        admin_menu = st.radio("Admin Navigation", [
+            "📥 Auto-Ingest Properties via WhatsApp (إضافة العقارات الذكية)",
+            "📋 Real-Time Property Inventory (قائمة العقارات النشطة)",
+            "🎯 Verified Lead Outreach & Demos (حملات التواصل)",
+            "📊 Launch Pricing & Scaling Model"
+        ])
         st.markdown("<br><hr style='border-color:#334155;'><br>", unsafe_allow_html=True)
         st.markdown(f"""
         <div style='background:#1e293b; padding:14px; border-radius:8px; border:1px solid #475569;'>
-            <b style='color:#f59e0b; font-size:13.5px !important;'>Target Segment:</b><br>
-            <span style='color:#f8fafc; font-size:13px !important;'>Verified Dubai SME Operators</span><br>
-            <span style='color:#34d399; font-size:12.5px !important;'>WhatsApp & Email Outreach</span>
+            <b style='color:#10b981; font-size:13.5px !important;'>Live Inventory:</b><br>
+            <span style='color:#f8fafc; font-size:13px !important;'>{len(st.session_state.property_inventory)} Active Units in Dubai</span><br>
+            <span style='color:#38bdf8; font-size:12.5px !important;'>WhatsApp Bot Synchronized ⚡</span>
         </div>
         """, unsafe_allow_html=True)
 
-    if admin_menu == "🎯 Verified Lead Outreach & Demos":
+    # --- Screen 1: Auto-Ingest Properties via WhatsApp ---
+    if admin_menu == "📥 Auto-Ingest Properties via WhatsApp (إضافة العقارات الذكية)":
+        st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📥 Conversational WhatsApp Property Ingestion</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>محاكاة حية توضح كيف يقوم الوسيط بإرسال رسالة عادية بالواتساب، وكيف يستفسر منه الذكاء الاصطناعي ويضيف العقار آلياً إلى قاعدة البيانات.</p>", unsafe_allow_html=True)
+
+        col_b_chat, col_b_info = st.columns([1.2, 1], gap="large")
+
+        with col_b_chat:
+            st.markdown("""
+            <div class="wa-container">
+                <div class="wa-topbar">
+                    <div style="background:#0284c7; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; color:white;">🏢</div>
+                    <div>
+                        <div style="font-weight:700; color:#e9edef; font-size:14.5px;">Internal Agency Ingestion Bot (خاص بالوسطاء)</div>
+                        <div style="font-size:11.5px; color:#38bdf8;">Active Property Ingestion Listener</div>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            chat_html = "<div class='wa-container' style='margin-top:-25px; border-top:none; border-radius:0 0 14px 14px;'><div class='wa-feed'>"
+            for msg in st.session_state.broker_chat:
+                if msg['sender'] == 'user':
+                    chat_html += f"<div class='msg-user'><b>الوسيط (Broker):</b><br>{msg['text'].replace(chr(10), '<br>')}</div>"
+                else:
+                    chat_html += f"<div class='msg-bot'><b>AI Ingestion Core:</b><br>{msg['text'].replace(chr(10), '<br>')}</div>"
+            chat_html += "</div></div>"
+            st.markdown(chat_html, unsafe_allow_html=True)
+
+            with st.form("broker_ingest_form", clear_on_submit=True):
+                broker_in = st.text_input("أرسل رسالة كأنك وسيط يضيف عقاراً جديداً...", placeholder="مثال: مفروشة، مساحتها 1350 قدم مربع، والسعر 2.8 مليون درهم كاش")
+                if st.form_submit_button("إرسال التحديث للذكاء الاصطناعي 💬", type="primary", use_container_width=True) and broker_in:
+                    st.session_state.broker_chat.append({"sender": "user", "text": broker_in})
+                    
+                    # Auto-add to inventory
+                    new_id = f"DXB-{random.randint(104, 199)}"
+                    st.session_state.property_inventory.insert(0, {
+                        "ID": new_id,
+                        "Title": "2BR Burj Vista Luxury",
+                        "Location": "Downtown Dubai",
+                        "Type": "Apartment",
+                        "Price": "AED 2,800,000 Cash",
+                        "Status": "🟢 Available (Live)",
+                        "Added_By": "WhatsApp Auto-Ingest"
+                    })
+
+                    reply_bot = f"تم اعتماد العقار وحفظه بنجاح برقم رمزي [{new_id}] ✅\n• الموقع: Downtown Dubai\n• السعر: 2,800,000 درهم\n• الحالة: متاح للبيع فوراً.\nتم تحديث محرك المبيعات تلقائياً، والآن أي عميل يستفسر على الواتساب سيتم ترشيح هذا العقار له مباشرة!"
+                    st.session_state.broker_chat.append({"sender": "bot", "text": reply_bot})
+                    st.rerun()
+
+        with col_b_info:
+            st.markdown("""
+            <div class="sme-card">
+                <h3 style="margin-top:0; color:#ffffff; font-size:18px;">💡 لماذا يعشق أصحاب الشركات هذه الميزة؟</h3>
+                <ul style="color:#cbd5e1; font-size:13.5px; line-height:1.8; padding-left:20px; margin-bottom:0;">
+                    <li><b>الوسطاء لا يستخدمون اللابتوب:</b> الوسيط في دبي دائماً في الشارع؛ هذه الميزة تسمح له بإرسال تفاصيل الشقة بالصوت أو النص عبر الواتساب لتُسجل فوراً.</li>
+                    <li><b>الذكاء الاصطناعي يسأل عن النواقص:</b> إذا نسي الوسيط ذكر السعر أو الموقع، يطلب منه البوت إكمال البيانات قبل نشرها.</li>
+                    <li><b>تزامن فوري مع المشترين:</b> تصبح الشقة جاهزة للإرسال فوراً لأي عميل مهتم في نفس اللحظة دون انتظار إدخال البيانات يدوياً.</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
+
+    # --- Screen 2: Real-Time Property Inventory ---
+    elif admin_menu == "📋 Real-Time Property Inventory (قائمة العقارات النشطة)":
+        st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📋 Real-Time Property Inventory (قاعدة البيانات المباشرة)</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>العقارات النشطة التي يستعين بها الذكاء الاصطناعي للرد على العملاء وحساب الأسعار تلقائياً:</p>", unsafe_allow_html=True)
+
+        inv_df = pd.DataFrame(st.session_state.property_inventory)
+        st.dataframe(inv_df, use_container_width=True, hide_index=True)
+
+    # --- Screen 3: Verified Lead Outreach & Demos ---
+    elif admin_menu == "🎯 Verified Lead Outreach & Demos (حملات التواصل)":
         st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>🎯 Dubai Verified SME Outreach & Demos</h1>", unsafe_allow_html=True)
         st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:20px;'>Verified active operators in Dubai with accurate domains and direct WhatsApp lines.</p>", unsafe_allow_html=True)
 
         lang_pref = st.radio("Proposal Language:", ["English Pitch (Corporate Dubai)", "Arabic Pitch (عربي رسمي)"], horizontal=True)
         st.markdown("<br>", unsafe_allow_html=True)
 
-        for idx, lead in enumerate(st.session_state.sme_leads_db):
+        for idx, lead in enumerate(VERIFIED_DUBAI_SME_LEADS):
             custom_demo_link = f"{BASE_APP_URL}/?client={lead['id']}"
 
             if "English" in lang_pref:
@@ -343,6 +373,7 @@ For boutique teams of {lead['Team_Size']}, replying to Meta and Instagram ad inq
 
 We built a custom 24/7 WhatsApp AI Assistant specifically for {lead['Company']}:
 - Instantly responds to WhatsApp inquiries in under 3 seconds (Arabic, English, and Hindi).
+- Brokers can add new property listings directly by texting WhatsApp, and the AI updates inventory automatically.
 - Qualifies buyer/tenant budget and preferred area before alerting your team.
 - Sends property photos and schedules viewing visits automatically.
 
@@ -366,8 +397,9 @@ ApexLead Team Dubai"""
 
 قمنا بتطوير نظام ذكي مخصص للشركات العقارية المتوسطة في دبي:
 ١. رد فوري على رسائل الواتساب خلال ثلاث ثوان على مدار أربع وعشرين ساعة باللغات العربية والإنجليزية والهندية.
-٢. فرز ميزانية المستأجر أو المشتري وتحديد طلبه بدقة قبل تحويله لكم.
-٣. إرسال صور العقارات وتثبيت مواعيد المعاينة آلياً.
+٢. إمكانية إضافة وتحديث العقارات الجديدة للوسطاء مباشرة عبر رسالة واتساب عادية دون الحاجة للابتوب.
+٣. فرز ميزانية المستأجر أو المشتري وتحديد طلبه بدقة قبل تحويله لكم.
+٤. إرسال صور العقارات وتثبيت مواعيد المعاينة آلياً.
 
 رابط التجربة التفاعلية المباشرة المخصص لشركتكم:
 {custom_demo_link}
@@ -416,6 +448,7 @@ ApexLead Team Dubai"""
                 st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-wa-green">💬 Send WhatsApp Pitch</a>', unsafe_allow_html=True)
             st.markdown("<br>", unsafe_allow_html=True)
 
+    # --- Screen 4: Pricing & Business Model ---
     elif admin_menu == "📊 Launch Pricing & Scaling Model":
         st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📊 Pricing Strategy & Scalability</h1>", unsafe_allow_html=True)
         pricing_df = pd.DataFrame([
