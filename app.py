@@ -4,14 +4,17 @@ from datetime import datetime
 import urllib.parse
 
 st.set_page_config(
-    page_title="ApexLead AI | Dubai SME WhatsApp Sales Engine",
+    page_title="ApexLead AI | Dubai Smart Real Estate Engine",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
+# Base App URL
+BASE_APP_URL = "https://apexlead-dubai-d4paqwmnuacidn564qqnsr.streamlit.app"
+
 # --------------------------------------------------
-# 🎨 High-Contrast & Sharp International Theme
+# 🎨 Global Clean Styling
 # --------------------------------------------------
 st.markdown("""
 <style>
@@ -25,104 +28,15 @@ st.markdown("""
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     
-    /* Ultra-Clear & Crisp Sidebar Styling */
-    section[data-testid="stSidebar"] {
-        background-color: #0f172a !important;
-        border-right: 2px solid #334155 !important;
-    }
-    section[data-testid="stSidebar"] * {
-        color: #f8fafc !important;
-        font-size: 14.5px !important;
-        font-weight: 600 !important;
-    }
-    section[data-testid="stSidebar"] .stRadio label {
-        background: #1e293b;
-        padding: 10px 14px;
-        border-radius: 8px;
-        margin-bottom: 8px;
-        border: 1px solid #475569;
-        display: flex;
-        align-items: center;
-        transition: all 0.2s;
-    }
-    section[data-testid="stSidebar"] .stRadio label:hover {
-        border-color: #10b981;
-        background: #334155;
-    }
-
-    .brand-box {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 25px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #334155;
-    }
-    .brand-logo {
-        background: #10b981;
-        color: #ffffff !important;
-        font-weight: 900;
-        font-size: 22px !important;
-        padding: 6px 14px;
-        border-radius: 10px;
-    }
-    .brand-text {
-        font-size: 20px !important;
-        font-weight: 800 !important;
-        color: #ffffff !important;
-    }
-    .brand-text span {
-        color: #10b981 !important;
-    }
-
-    .sme-card {
-        background: #0f172a;
-        border: 1px solid #334155;
-        border-radius: 12px;
-        padding: 22px;
-        margin-bottom: 18px;
-    }
-
-    .offer-badge {
-        background: #d97706;
-        color: #ffffff !important;
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-weight: 800 !important;
-        font-size: 13px !important;
-        display: inline-block;
-    }
-
-    .btn-email-action {
-        background: #0284c7;
-        color: white !important;
-        padding: 10px 20px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 700;
-        font-size: 14px;
-        display: inline-block;
-        text-align: center;
-    }
-
-    .btn-wa-action {
-        background: #10b981;
-        color: white !important;
-        padding: 10px 20px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 700;
-        font-size: 14px;
-        display: inline-block;
-        text-align: center;
-    }
-
-    /* WhatsApp Simulator */
+    /* WhatsApp Container */
     .wa-container {
         background: #0b141a;
         border: 1px solid #334155;
         border-radius: 14px;
         overflow: hidden;
+        max-width: 650px;
+        margin: 0 auto 25px auto;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     .wa-topbar {
         background: #1f2c34;
@@ -160,25 +74,57 @@ st.markdown("""
         font-size: 14px;
         line-height: 1.5;
     }
+
+    /* Admin UI */
+    .sme-card {
+        background: #0f172a;
+        border: 1px solid #334155;
+        border-radius: 12px;
+        padding: 22px;
+        margin-bottom: 18px;
+    }
+    .btn-email-action {
+        background: #0284c7;
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+        display: inline-block;
+        text-align: center;
+    }
+    .btn-wa-action {
+        background: #10b981;
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+        display: inline-block;
+        text-align: center;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 🗄️ SME Lead Database
+# 🗄️ Database of Dubai SME Companies
 # --------------------------------------------------
 DUBAI_SME_LEADS = [
     {
+        "id": "KeyOne",
         "Company": "Key One Holiday Homes",
         "Category": "Boutique Vacation Rentals",
-        "Location": "Al Barsha / JVC",
+        "Location": "Al Barsha & JVC, Dubai",
         "Team_Size": "8 Staff Members",
         "Decision_Maker": "Property Manager & Founder",
         "Email": "info@keyoneholidayhomes.com",
         "Phone": "+97144471727",
-        "Ad_Budget": "AED 8,000 / mo",
         "Target_Pain": "Operations team overwhelmed by weekend late-night booking messages on WhatsApp."
     },
     {
+        "id": "WhiteCo",
         "Company": "White & Co Real Estate",
         "Category": "Independent Brokerage",
         "Location": "Dubai Marina",
@@ -186,10 +132,10 @@ DUBAI_SME_LEADS = [
         "Decision_Maker": "Managing Director",
         "Email": "contact@whiteandcogroup.com",
         "Phone": "+97148762000",
-        "Ad_Budget": "AED 15,000 / mo",
         "Target_Pain": "Brokers wasting 3 hours daily on unqualified inquiries with zero budget."
     },
     {
+        "id": "FrankPorter",
         "Company": "Frank Porter Stays",
         "Category": "Holiday Homes Operator",
         "Location": "JLT / Dubai Marina",
@@ -197,10 +143,10 @@ DUBAI_SME_LEADS = [
         "Decision_Maker": "Reservations Lead",
         "Email": "bookings@frankporter.com",
         "Phone": "+97145897140",
-        "Ad_Budget": "AED 10,000 / mo",
         "Target_Pain": "Slow response to European tourists during late hours causes guests to book competing apartments."
     },
     {
+        "id": "AlMira",
         "Company": "Al Mira Real Estate",
         "Category": "Local Community Agency",
         "Location": "Business Bay",
@@ -208,80 +154,148 @@ DUBAI_SME_LEADS = [
         "Decision_Maker": "Agency Owner",
         "Email": "info@almira.ae",
         "Phone": "+97143928888",
-        "Ad_Budget": "AED 6,000 / mo",
         "Target_Pain": "Owner manually replies to all Instagram ad messages after office hours."
     }
 ]
 
-if 'chat_feed' not in st.session_state:
-    st.session_state.chat_feed = [
-        {"sender": "user", "text": "مرحبا، شفت إعلانكم بخصوص استوديو مفروش في قرية جميرا الدائرية، كم الإيجار الشهري؟"},
-        {"sender": "bot", "text": "أهلاً وسهلاً بك. متاح لدينا خياران مفروشان بالكامل في قرية جميرا الدائرية شامل كافة الفواتير والإنترنت بسعر 5,400 درهم شهرياً. هل تفضل حجز موعد للمعاينة اليوم أم ترغب في استلام صور الشقة أولاً؟"},
-    ]
-
-DEMO_URL = "https://apexlead-dubai-d4paqwmnuacidn564qqnsr.streamlit.app"
+# Check Query Params to determine if a client is viewing their custom demo
+query_params = st.query_params
+client_id = query_params.get("client", None)
+view_mode = query_params.get("view", "client" if client_id else "admin")
 
 # --------------------------------------------------
-# 🧭 Sidebar Navigation
+# 🌟 1. CLIENT DEDICATED DEMO VIEW (What the Client Sees)
 # --------------------------------------------------
-with st.sidebar:
-    st.markdown("""
-    <div class="brand-box">
-        <span class="brand-logo">⚡</span>
-        <div class="brand-text">ApexLead <span>AI</span></div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("<p style='color:#94a3b8; font-size:12px !important; text-transform:uppercase; margin-bottom:12px;'>Menu Navigation</p>", unsafe_allow_html=True)
-    
-    menu = st.radio(
-        "Menu",
-        [
-            "🎯 Boutique Leads & Outreach",
-            "📱 Live WhatsApp Simulator", 
-            "📊 SME Pricing & Market Entry Model"
-        ],
-        label_visibility="collapsed"
-    )
-    
-    st.markdown("<br><hr style='border-color:#334155;'><br>", unsafe_allow_html=True)
+if view_mode == "client" or client_id:
+    # Match client name or default
+    matched_company = "Your Real Estate Agency"
+    matched_loc = "Dubai"
+    for lead in DUBAI_SME_LEADS:
+        if lead["id"].lower() == str(client_id).lower():
+            matched_company = lead["Company"]
+            matched_loc = lead["Location"]
+            break
+
     st.markdown(f"""
-    <div style='background:#1e293b; padding:14px; border-radius:8px; border:1px solid #475569;'>
-        <b style='color:#f59e0b; font-size:14px !important;'>🔥 Launch Offer Active:</b><br>
-        <span style='color:#f8fafc; font-size:13.5px !important;'>AED 250 for Month 1</span><br>
-        <span style='color:#34d399; font-size:13px !important;'>+ 1 Month Support FREE</span><br><br>
-        <b style='color:#94a3b8; font-size:12px !important;'>Active Link:</b><br>
-        <span style='color:#38bdf8; font-size:11.5px !important; word-break:break-all;'>{DEMO_URL}</span>
+    <div style="text-align:center; padding: 25px 15px 15px 15px;">
+        <div style="display:inline-block; background:#10b981; color:white; font-weight:800; padding:4px 12px; border-radius:20px; font-size:12px; margin-bottom:10px;">
+            ⚡ LIVE INTERACTIVE PROTOTYPE
+        </div>
+        <h1 style="font-size:28px; font-weight:800; color:#ffffff; margin-bottom:6px;">{matched_company}</h1>
+        <p style="color:#94a3b8; font-size:14.5px; max-width:600px; margin:0 auto 20px auto;">
+            Experience how your 24/7 AI WhatsApp Assistant instantly qualifies property inquiries and books viewings for your <b>{matched_loc}</b> listings.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    if 'client_chat' not in st.session_state:
+        st.session_state.client_chat = [
+            {"sender": "user", "text": "مرحبا، شفت إعلانكم بخصوص الشقق المفروشة في دبي، في مجال استفسر؟"},
+            {"sender": "bot", "text": f"أهلاً وسهلاً بك في {matched_company} 🌟 يسعدنا خدمتك على مدار ٢٤ ساعة. متاح لدينا خيارات مفروشة بالكامل ومجهزة في أرقى الأبراج. هل تبحث عن إيجار شهري أم سنوي؟ وما هي المنطقة المفضلة لديك؟"},
+        ]
+
+    st.markdown(f"""
+    <div class="wa-container">
+        <div class="wa-topbar">
+            <div style="background:#10b981; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; color:white;">⚡</div>
+            <div>
+                <div style="font-weight:700; color:#e9edef; font-size:14.5px;">{matched_company} AI Assistant</div>
+                <div style="font-size:11.5px; color:#10b981;">Online (Instant 24/7 Response)</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    chat_html = "<div class='wa-container' style='margin-top:-25px; border-top:none; border-radius:0 0 14px 14px;'><div class='wa-feed'>"
+    for msg in st.session_state.client_chat:
+        if msg['sender'] == 'user':
+            chat_html += f"<div class='msg-user'><b>You (Customer):</b><br>{msg['text']}</div>"
+        else:
+            chat_html += f"<div class='msg-bot'><b>{matched_company} Assistant:</b><br>{msg['text']}</div>"
+    chat_html += "</div></div>"
+    st.markdown(chat_html, unsafe_allow_html=True)
+
+    with st.form("client_sim_form", clear_on_submit=True):
+        col_in1, col_in2 = st.columns([4, 1.2])
+        with col_in1:
+            client_input = st.text_input("Test the AI response (Arabic, English, or Hindi)...", placeholder="e.g. كم إيجار الاستوديو؟ / What is the monthly rent? / بدي عاين الشقة", label_visibility="collapsed")
+        with col_in2:
+            send_btn = st.form_submit_button("Send 💬", type="primary", use_container_width=True)
+
+        if send_btn and client_input:
+            st.session_state.client_chat.append({"sender": "user", "text": client_input})
+            lower_in = client_input.strip().lower()
+
+            # Dynamic AI Responses
+            if any(w in lower_in for w in ["namaste", "bhai", "kya", "crore", "lakh", "hai", "bhk", "paisa", "rent"]):
+                reply = f"Namaste ji! Welcome to {matched_company}. Humare paas 1BHK aur studio units available hain with all bills included. Kya aap viewing schedule karna chahte hain?"
+            elif any(w in lower_in for w in ["hello", "hi", "price", "bedroom", "studio", "available", "month", "rent", "viewing"]):
+                reply = f"Hello and welcome to {matched_company}! We have fully furnished units available right now with flexible monthly payments. Would you like to schedule a viewing visit today?"
+            elif any(w in lower_in for w in ["معاينة", "موعد", "حجز", "بدي شوف", "عاين"]):
+                reply = "يسعدنا ترتيب موعد لمعاينة الشقة اليوم الساعة الخامسة مساءً أو غداً صباحاً. أي الموعدين يناسب جدولكم الكريم؟"
+            elif any(w in lower_in for w in ["كم السعر", "كم الإيجار", "الأسعار", "بكم"]):
+                reply = "تبدأ الأسعار الشهرية من ٥,٤٠٠ درهم شاملة لكافة الفواتير والإنترنت والصيانة. هل تفضل الدفع شهرياً أم سنوياً؟"
+            else:
+                reply = f"أهلاً وسهلاً بك في {matched_company}. تم استلام طلبكم الكريم بعناية، ومتاح لدينا خيارات مطابقة تماماً. هل ترغب في استلام صور الشقة والموقع عبر هذه المحادثة؟"
+
+            st.session_state.client_chat.append({"sender": "bot", "text": reply})
+            st.rerun()
+
+    # Launch Offer Call To Action Box for the Client
+    st.markdown("""
+    <div style="max-width:650px; margin: 20px auto 40px auto; background:#0f172a; border:2px solid #10b981; border-radius:12px; padding:24px; text-align:center;">
+        <span style="background:#d97706; color:white; font-weight:800; padding:4px 12px; border-radius:6px; font-size:12px;">EXCLUSIVE LAUNCH OFFER</span>
+        <h3 style="color:#ffffff; margin:10px 0 6px 0; font-size:22px;">Activate for Your Agency: AED 250 Only</h3>
+        <p style="color:#94a3b8; font-size:14px; margin-bottom:18px;">
+            Get this exact system connected to your business WhatsApp in 15 minutes. Includes <b>Month 1 Setup + 1 Full Month Technical Support FREE</b> (2 Months Total).
+        </p>
+        <a href="https://wa.me/971500000000?text=Hello%2C%20I%20tested%20the%20demo%20and%20want%20to%20activate%20the%20AED%20250%20offer" target="_blank" style="background:#10b981; color:white; padding:12px 28px; border-radius:8px; font-weight:800; font-size:15px; text-decoration:none; display:inline-block;">
+            ⚡ Claim 7-Day Free Trial & Setup
+        </a>
     </div>
     """, unsafe_allow_html=True)
 
 # --------------------------------------------------
-# 🎯 1. Boutique Leads & Outreach Screen
+# 🛡️ 2. ADMIN MASTER CONTROL CENTER (Your Private Workspace)
 # --------------------------------------------------
-if menu == "🎯 Boutique Leads & Outreach":
-    st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>🎯 Dubai SME & Boutique Agency Outreach</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#94a3b8; font-size:13.5px; margin-bottom:20px;'>Ultra-high-converting launch offer designed to onboard Dubai agencies instantly with zero friction.</p>", unsafe_allow_html=True)
-    
-    lang_pref = st.radio("Select Proposal Language:", ["English Pitch (Recommended for Dubai)", "Arabic Pitch (رسالة عربية رسمية خالصة)"], horizontal=True)
-    
-    for idx, lead in enumerate(DUBAI_SME_LEADS):
-        if "English" in lang_pref:
-            email_subj = f"Quick question regarding {lead['Company']} WhatsApp listings"
+else:
+    # Sidebar
+    with st.sidebar:
+        st.markdown("""
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+            <div style="background:#10b981; color:white; font-weight:900; padding:6px 12px; border-radius:8px; font-size:18px;">⚡</div>
+            <div style="font-weight:800; font-size:18px; color:white;">ApexLead <span style="color:#10b981;">ADMIN</span></div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        admin_menu = st.radio("Admin Navigation", ["🎯 Client Outreach & Custom Demos", "📊 Pricing & Business Model"])
+        st.markdown("---")
+        st.info("💡 **Private Admin View:** Clients only see their custom WhatsApp simulator.")
+
+    if admin_menu == "🎯 Client Outreach & Custom Demos":
+        st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>🎯 Dubai Boutique Outreach & Dedicated Demos</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='color:#94a3b8; font-size:14px; margin-bottom:25px;'>Each company below receives a custom demo link that displays <b>ONLY their branded WhatsApp simulator</b>.</p>", unsafe_allow_html=True)
+
+        for idx, lead in enumerate(DUBAI_SME_LEADS):
+            # Custom dedicated link for each client
+            custom_demo_link = f"{BASE_APP_URL}/?client={lead['id']}"
+
+            email_subj = f"Quick question regarding {lead['Company']} WhatsApp inquiries"
             email_body = f"""Hi {lead['Decision_Maker']} & team at {lead['Company']},
 
 I noticed your active listings in {lead['Location']}.
 
 For boutique teams of {lead['Team_Size']}, replying to Meta and Instagram ad inquiries after 8 PM or on weekends often causes serious buyer drop-offs.
 
-We built ApexLead AI specifically for Dubai boutique operators:
-- Instantly responds to WhatsApp inquiries in under 3 seconds 24/7 (Arabic, English, and Hindi).
-- Qualifies buyer/tenant budget and area before alerting your team.
-- Sends property photo catalogs and schedules viewing visits automatically.
+We built a custom 24/7 WhatsApp AI Assistant specifically for {lead['Company']}:
+- Instantly responds to WhatsApp inquiries in under 3 seconds (Arabic, English, and Hindi).
+- Qualifies buyer/tenant budget and preferred area before alerting your team.
+- Sends property photos and schedules viewing visits automatically.
 
-Interactive 60-Second Demo:
-{DEMO_URL}
+🔗 Test your company's dedicated demo here:
+{custom_demo_link}
 
-🔥 Special Market Launch Offer:
+🔥 Special Launch Offer:
 Get the full system operational for just AED 250 for Month 1, plus 1 additional month of full technical support for FREE (Total 2 months for AED 250).
 
 Would you be open to a quick 3-minute chat this week?
@@ -289,168 +303,42 @@ Would you be open to a quick 3-minute chat this week?
 Best regards,
 ApexLead Team Dubai"""
 
-        else:
-            email_subj = f"استفسار بخصوص أتمتة رسائل الواتساب لشركة [{lead['Company']}]"
-            email_body = f"""تحية طيبة للأستاذ / {lead['Decision_Maker']} وفريق العمل في [{lead['Company']}]،
+            mailto_link = f"mailto:{lead['Email']}?subject={urllib.parse.quote(email_subj)}&body={urllib.parse.quote(email_body)}"
+            wa_text = f"Hi {lead['Company']} team, I prepared a custom WhatsApp AI demo for your {lead['Location']} listings: {custom_demo_link}\n\nOur launch offer is AED 250 for 2 months."
+            wa_link = f"https://wa.me/{lead['Phone'].replace('+', '').replace(' ', '')}?text={urllib.parse.quote(wa_text)}"
 
-لاحظنا نشاطكم وعروضكم العقارية المميزة في منطقة {lead['Location']}.
-
-ندرك أن سرعة الرد على استفسارات العملاء خارج ساعات العمل الرسمية وفي عطلات نهاية الأسبوع ترفع نسبة حجز المعاينات وتأكيد الصفقات لأكثر من ستين بالمائة.
-
-قمنا بتطوير نظام ذكي مخصص للشركات العقارية المتوسطة في دبي:
-١. رد فوري على رسائل الواتساب خلال ثلاث ثوان على مدار أربع وعشرين ساعة باللغات العربية والإنجليزية والهندية.
-٢. فرز ميزانية المستأجر أو المشتري وتحديد طلبه بدقة قبل تحويله لكم.
-٣. إرسال صور العقارات وتثبيت مواعيد المعاينة آلياً.
-
-رابط التجربة التفاعلية المباشرة:
-{DEMO_URL}
-
-🔥 عرض الإطلاق الخاص:
-نقدم لكم النظام بالكامل للشهر الأول مقابل ٢٥٠ درهم فقط، مع شهر إضافي كامل من المتابعة والدعم الفني مجاناً (شهرين كاملين مقابل ٢٥٠ درهم فقط).
-
-يسعدنا ترتيب محادثة قصيرة للاطلاع على النظام في الوقت الذي يناسبكم.
-
-وتفضلوا بقبول فائق الاحترام والتقدير،
-فريق التطوير والأتمتة"""
-
-        mailto_link = f"mailto:{lead['Email']}?subject={urllib.parse.quote(email_subj)}&body={urllib.parse.quote(email_body)}"
-        wa_text = f"Hi {lead['Company']} team, I sent a quick proposal to {lead['Email']} regarding our AED 250 WhatsApp automation launch offer for your {lead['Location']} listings. Live demo: {DEMO_URL}"
-        wa_link = f"https://wa.me/{lead['Phone'].replace('+', '').replace(' ', '')}?text={urllib.parse.quote(wa_text)}"
-
-        st.markdown(f"""
-        <div class="sme-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <div>
-                    <span style="font-size:18px; font-weight:800; color:#ffffff;">🏢 {lead['Company']}</span>
-                    &nbsp;&nbsp;<span style="background:#082f49; color:#38bdf8; padding:3px 8px; border-radius:4px; font-size:12px; font-weight:700;">{lead['Category']}</span>
-                    &nbsp;<span style="background:#064e3b; color:#34d399; padding:3px 8px; border-radius:4px; font-size:12px; font-weight:700;">📍 {lead['Location']}</span>
+            st.markdown(f"""
+            <div class="sme-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <div>
+                        <span style="font-size:18px; font-weight:800; color:#ffffff;">🏢 {lead['Company']}</span>
+                        &nbsp;&nbsp;<span style="background:#082f49; color:#38bdf8; padding:3px 8px; border-radius:4px; font-size:12px; font-weight:700;">{lead['Category']}</span>
+                        &nbsp;<span style="background:#064e3b; color:#34d399; padding:3px 8px; border-radius:4px; font-size:12px; font-weight:700;">📍 {lead['Location']}</span>
+                    </div>
+                    <div>
+                        <span style="background:#d97706; color:white; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:800;">🔥 AED 250 Offer</span>
+                    </div>
                 </div>
-                <div>
-                    <span class="offer-badge">🔥 AED 250 Launch Offer</span>
+                <p style="color:#94a3b8; font-size:13px; margin-bottom:10px;">
+                    👤 <b>Contact:</b> {lead['Decision_Maker']} | ✉️ <b>Email:</b> {lead['Email']} | 📞 <b>Phone:</b> {lead['Phone']}
+                </p>
+                <div style="background:#080c14; border:1px solid #1e293b; padding:10px 14px; border-radius:6px; font-size:13px; color:#38bdf8; margin-bottom:15px; word-break:break-all;">
+                    🔗 <b>Client Dedicated Link:</b> <a href="{custom_demo_link}" target="_blank" style="color:#38bdf8;">{custom_demo_link}</a>
                 </div>
             </div>
-            
-            <div style="background:#080c14; border:1px solid #1e293b; padding:12px; border-radius:8px; margin-bottom:12px; font-size:13px; color:#cbd5e1;">
-                <b>Identified Friction:</b> {lead['Target_Pain']}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.text_area("Ready-to-Send Proposal:", email_body, height=180, key=f"sme_box_{idx}")
-        
-        c1, c2 = st.columns([1, 1])
-        with c1:
-            st.markdown(f'<a href="{mailto_link}" class="btn-email-action" style="width:100%;">📧 Send Proposal via Email</a>', unsafe_allow_html=True)
-        with c2:
-            st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-wa-action" style="width:100%;">💬 Send WhatsApp Note</a>', unsafe_allow_html=True)
-        st.markdown("<br>", unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
 
-# --------------------------------------------------
-# 📱 2. Live WhatsApp Simulator Screen (Context-Aware Multi-Scenario)
-# --------------------------------------------------
-elif menu == "📱 Live WhatsApp Simulator":
-    st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📱 Live WhatsApp Experience (Context-Aware Engine)</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#94a3b8; font-size:13.5px; margin-bottom:20px;'>Intelligent contextual responses that adapt to greetings, inquiries, pricing, and viewing requests.</p>", unsafe_allow_html=True)
-    
-    col_chat, col_details = st.columns([1.2, 1], gap="large")
-    
-    with col_chat:
-        st.markdown("""
-        <div class="wa-container">
-            <div class="wa-topbar">
-                <div style="background:#10b981; width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; color:white;">⚡</div>
-                <div>
-                    <div style="font-weight:700; color:#e9edef; font-size:14.5px;">Boutique Agency AI Assistant</div>
-                    <div style="font-size:11.5px; color:#10b981;">Online (Context-Aware Engine)</div>
-                </div>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        chat_html = "<div class='wa-feed'>"
-        for msg in st.session_state.chat_feed:
-            if msg['sender'] == 'user':
-                chat_html += f"<div class='msg-user'><b>Customer:</b><br>{msg['text']}</div>"
-            else:
-                chat_html += f"<div class='msg-bot'><b>AI Assistant:</b><br>{msg['text']}</div>"
-        chat_html += "</div>"
-        st.markdown(chat_html, unsafe_allow_html=True)
-        
-        with st.form("dynamic_chat_form", clear_on_submit=True):
-            user_input = st.text_input("Type inquiry (e.g. مرحبا / كيفك / شو في خيارات / كم السعر / بدي عاين الشقة / Hello / Namaste)...", placeholder="اكتب رسالة تجريبية هنا...")
-            if st.form_submit_button("Send WhatsApp Message 💬", type="primary", use_container_width=True) and user_input:
-                st.session_state.chat_feed.append({"sender": "user", "text": user_input})
-                lower_in = user_input.strip().lower()
-                
-                # --- Scenario 1: Hindi / Hinglish ---
-                if any(w in lower_in for w in ["namaste", "bhai", "kya", "crore", "lakh", "hai", "bhk", "paisa", "rent", "kaise"]):
-                    if any(w in lower_in for w in ["kaise", "haal", "namaste", "bhai"]) and len(lower_in.split()) <= 3:
-                        reply = "Namaste ji! Main badhiya hoon. Aap bataiye, Dubai mein rental apartment ya investment property dekh rahe hain?"
-                    elif any(w in lower_in for w in ["price", "rent", "kitna"]):
-                        reply = "Studio aur 1BHK starting rent 5,500 AED per month hai with all utilities included. Kya aap pictures dekhna chahenge?"
-                    else:
-                        reply = "Humare paas JVC aur Marina mein ready options available hain. Aap kab viewing schedule karna chahte hain?"
-                
-                # --- Scenario 2: English ---
-                elif any(w in lower_in for w in ["hello", "hi", "hey", "price", "bedroom", "studio", "available", "month", "jvc", "marina", "rent", "viewing", "options"]):
-                    if any(w in lower_in for w in ["hi", "hello", "hey", "how are you"]) and len(lower_in.split()) <= 4:
-                        reply = "Hello! I am doing great, thank you for reaching out. Are you looking for a furnished monthly rental or a yearly apartment in Dubai?"
-                    elif any(w in lower_in for w in ["option", "available", "what do you have"]):
-                        reply = "We currently have luxury Studios (AED 5,400/mo), 1-Bedrooms (AED 7,200/mo), and 2-Bedrooms (AED 9,800/mo) in JVC and Dubai Marina. Which area do you prefer?"
-                    elif any(w in lower_in for w in ["price", "cost", "rent"]):
-                        reply = "Our monthly rates start at AED 5,400 all-inclusive (DEWA, high-speed WiFi, and gym access). Would you like to view the unit today?"
-                    elif any(w in lower_in for w in ["viewing", "visit", "see"]):
-                        reply = "We can arrange a viewing today at 5:00 PM or tomorrow at 11:00 AM. Which time works best for you?"
-                    else:
-                        reply = "Thank you for your inquiry! We have units available matching your request. Would you like me to send the full photo gallery and location map?"
+            c1, c2 = st.columns(2)
+            with c1:
+                st.markdown(f'<a href="{mailto_link}" class="btn-email-action" style="width:100%;">📧 Send Proposal via Email</a>', unsafe_allow_html=True)
+            with c2:
+                st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-wa-action" style="width:100%;">💬 Send WhatsApp Pitch</a>', unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
 
-                # --- Scenario 3: Arabic Context-Aware (No English words mixed) ---
-                else:
-                    # 1. Greetings / Small talk
-                    if any(w in lower_in for w in ["كيفك", "شلونك", "أخبارك", "عساك بخير", "مرحبا", "هلا", "السلام"]):
-                        reply = "أهلاً وسهلاً بك، حياك الله. أنا بخير وسعيد بخدمتك. هل تبحث عن شقة مفروشة بإيجار شهري أم سنوي؟ وما هي المنطقة المفضلة لديك؟"
-                    
-                    # 2. Options inquiry
-                    elif any(w in lower_in for w in ["شو في خيارات", "شو عندكم", "ما هي الخيارات", "العروض المتوفرة", "شو متاح"]):
-                        reply = "متاح لدينا حالياً ثلاث فئات مميزة: استوديو مفروش بالكامل (٥,٤٠٠ درهم شهرياً)، غرفة وصالة (٧,٢٠٠ درهم شهرياً)، وغرفتين وصالة عائلية فاخرة في قرية جميرا الدائرية ودبي مارينا. ما هي المساحة الأنسب لطلبكم؟"
-                    
-                    # 3. Pricing & Budget
-                    elif any(w in lower_in for w in ["كم السعر", "كم الإيجار", "الأسعار", "بكم", "تكلفة", "ميزانية"]):
-                        reply = "تبدأ الأسعار الشهرية من ٥,٤٠٠ درهم شاملة لجميع الفواتير والإنترنت والخدمات الترفيهية مثل المسبح والجيم. هل تفضل دفع الإيجار شهرياً أم بنظام الشيكات السنوية؟"
-                    
-                    # 4. Viewing & Booking
-                    elif any(w in lower_in for w in ["معاينة", "موعد", "حجز", "بدي شوف", "بدي عاين", "الموقع", "لوكيشن"]):
-                        reply = "يسعدنا ترتيب موعد لمعاينة الشقة اليوم الساعة الخامسة مساءً أو غداً الساعة الحادية عشرة صباحاً. أي الموعدين يناسب جدولكم الكريم؟"
-                    
-                    # 5. Default Property Inquiry
-                    else:
-                        reply = "تم استلام طلبكم الكريم بعناية. متاح لدينا خيارات مطابقة وجاهزة للسكن الفوري. هل ترغب في إرسال الصور ومخطط الشقة عبر هذه المحادثة أولاً؟"
-
-                st.session_state.chat_feed.append({"sender": "bot", "text": reply})
-                st.rerun()
-
-    with col_details:
-        st.markdown("""
-        <div class="sme-card">
-            <h3 style="margin-top:0; color:#ffffff; font-size:17px;">💡 Multi-Scenario Contextual Intelligence:</h3>
-            <ul style="color:#cbd5e1; font-size:13.5px; line-height:1.8; padding-left:20px; margin-bottom:0;">
-                <li><b>No Repetitive Scripts:</b> Recognizes greetings, pricing requests, available unit queries, and viewing requests dynamically.</li>
-                <li><b>Pure Linguistic Integrity:</b> Zero language-mixing bugs. Pure Arabic, Pure English, and Pure Hindi.</li>
-                <li><b>Unbeatable Launch Price:</b> AED 250 for Month 1 + 1 Month FREE Support gives you the fastest path to client acquisition.</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-
-# --------------------------------------------------
-# 📊 3. SME Pricing & Market Entry Model
-# --------------------------------------------------
-elif menu == "📊 SME Pricing & Market Entry Model":
-    st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📊 Penetration Pricing & Revenue Scaling Roadmap</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#94a3b8; font-size:13.5px; margin-bottom:20px;'>Two-phase pricing strategy: Capture the first 10-15 clients with the launch offer, then scale to standard enterprise rates.</p>", unsafe_allow_html=True)
-    
-    pricing_data = [
-        {"Stage": "🔥 Phase 1: Market Entry (Active Now)", "Target": "First 10-15 Dubai Agencies", "Price": "AED 250 (Month 1)", "Support Included": "1 Month FREE Support (2 Months Total)", "Strategy": "Fast validation & reviews"},
-        {"Stage": "💎 Phase 2: Standard Growth (After 10 Clients)", "Target": "Scaling Agencies & Operators", "Price": "AED 1,250 Setup", "Support Included": "AED 390 / month", "Strategy": "High margin recurring revenue"},
-        {"Stage": "👑 Phase 3: Premium Operator", "Target": "Holiday Homes (30+ Properties)", "Price": "AED 2,500 Setup", "Support Included": "AED 690 / month", "Strategy": "Multi-channel custom integrations"}
-    ]
-    st.dataframe(pd.DataFrame(pricing_data), use_container_width=True, hide_index=True)
+    elif admin_menu == "📊 Pricing & Business Model":
+        st.markdown("<h1 style='font-size:24px; font-weight:800; color:#ffffff;'>📊 Pricing & Scaling Strategy</h1>", unsafe_allow_html=True)
+        pricing_df = pd.DataFrame([
+            {"Stage": "🔥 Phase 1 (Active)", "Target": "First 10-15 Agencies", "Price": "AED 250", "Package": "Month 1 + 1 Month Support FREE", "Goal": "Fast onboarding & reviews"},
+            {"Stage": "💎 Phase 2 (After 10 Clients)", "Target": "Growing Operators", "Price": "AED 1,250 Setup + AED 390/mo", "Package": "Standard SaaS Tier", "Goal": "High recurring margin"},
+        ])
+        st.dataframe(pricing_df, use_container_width=True, hide_index=True)
